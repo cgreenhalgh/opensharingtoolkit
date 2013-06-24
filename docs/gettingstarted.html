@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Getting Started with Open Sharing Toolkit for Android</title></head><body><h1>Getting Started with Open Sharing Toolkit for Android</h1><p>This
+document explains how to get the Open Sharing Toolkit onto an Android
+device from a laptop (or PC), and requires either reasonable internet
+access or a complete copy of the required files on the laptop. </p><p>First, you need a suitable&nbsp;Android-based device, e.g. a smart phone or tablet running the Android operating system.&nbsp;</p><p style="margin-left: 40px;">The
+Android device will need to run a suitable version of the Android
+Operating System (I'm not sure what the useful minimum would be at the
+moment...)</p><p style="margin-left: 40px;">The Android device will
+need to have at least one - ideally several - ways of potentially
+exchanging files with other nearby devices, e.g. WiFi, Bluetooth, NFC,
+SD Card slot,&nbsp;USB. Ideally it would have support for WiFi hotspot
+and external USB storage or second memory card slot.&nbsp;</p><p style="margin-left: 40px;">The Android device should also allow you to  install applications from places other than the Google Play Store (see next point). Not all devices support installing apps like this, although many do (it
+is sometimes called "side-loading"). Google devices certainly will
+allow this, but you should check before
+buying/selecting a device to use. Otherwise you will have to use the
+Google Play versions of these applications on that device, which you
+will need reasonable internet access to download and install.</p><p>Second,
+assuming that you want to do this off the Internet, you need to allow
+your Android device to install applications from places other than the
+Google Play Store. On the device open "Settings", select "Security" and
+find "Unknown sources"; ensure that this is enabled (e.g. ticked).</p><p style="margin-left: 40px;"><span style="font-weight: bold;">Note</span>: this is not possible on all devices (see above). </p><p>Third, install the FileManager app on the device.&nbsp;</p><p>This version of the OpenSharingKit suggest Open Intents File Manager (<a href="http://www.openintents.org/en/filemanager">http://www.openintents.org/en/filemanager</a>, source <a href="https://github.com/openintents/filemanager">https://github.com/openintents/filemanager</a>, &nbsp;specifically <a href="../src/filemanager-master.zip">../src/filemanager-master.zip</a> from <a href="https://github.com/openintents/filemanager/archive/master.zip">https://github.com/openintents/filemanager/archive/master.zip</a> (2013-06-23), license <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache Version 2.0</a>), one of the most popular OpenSource Android file manager apps. The APK is&nbsp;<a href="../apks/FileManager-2.0.2.apk">../apks/FileManager-2.0.2.apk</a> from&nbsp;<a href="http://openintents.googlecode.com/files/FileManager-2.0.2.apk">http://openintents.googlecode.com/files/FileManager-2.0.2.apk</a> (2013-06-23).</p><p>There
+are four main ways of installing an APK if you don't have a file
+manager installed already, and depending on your device and situation
+only a subset may be possible:</p><ul><li>download the APK to the device from an accessible web server,
+which could be hosted on another nearby device, or on an external
+server (provided that you can access it with sufficient bandwidth).</li><ul><li><span style="font-weight: bold;">Note: </span>requires
+network access to the web server with the APK file on, either over WiFi
+to a local server or over WiFi or 2G/3G data with Internet connectivity
+to a remote server. </li></ul><li>install a version from Google Play,&nbsp;<a href="https://play.google.com/store/apps/details?id=org.openintents.filemanager">https://play.google.com/store/apps/details?id=org.openintents.filemanager</a>&nbsp;</li><ul><li><span style="font-weight: bold;">Note: </span>requires a reasonable Internet connection to the device</li></ul><li>install
+the FileManager APK (Android app file) directly onto the device from a
+laptop/PC using Android Debug Bridge; requires laptop with Android SDK
+installed,&nbsp;platform tools and USB driver downloaded and installed.
+See (internet)&nbsp;<a href="http://developer.android.com/tools/help/adb.html">http://developer.android.com/tools/help/adb.html</a></li><ul><li><span style="font-weight: bold;">Note: </span>requires a laptop with Android SDK and related software installed and a suitable means of connection, typically a USB cable.
+Also note that some devices may not support the Android Debug Bridge,
+while on most devices it will need to be enabled on the mobile device.
+On some devices (e.g. Nexus 7) you will first need to enable the
+"Developer options" within "Settings", by tapping 7 times on the "Build
+number" within the "Settings", "About..." screen. Within "Developer
+options" you will then need to enable "USB debugging".&nbsp; </li></ul><li>send the APK to the device from another nearby device using Bluetooth or NFC</li><ul><li><span style="font-weight: bold;">Note: </span>requires
+that the Android device and whichever device the APK is on both support
+compatible versions of Bluetooth and/or NFC, including file transfer
+support. Typically you will need to enable Bluetooth on the device and
+make it discoverable (in "Settings", "Bluetooth"). Unfortunately many
+devices do not allow transfer of APKs over Bluetooth by default, and
+require a helper application to be installed before they can (e.g. <a href="https://play.google.com/store/apps/details?id=it.medieval.blueftp&amp;hl=en">https://play.google.com/store/apps/details?id=it.medieval.blueftp</a>).&nbsp; </li></ul></ul>If
+you already have a (different) FileManager app installed then three
+other options may be available if your device supports them:<br><ul><li>install
+direct from internal storage via USB - if you have a suitable USB cable
+then most Android devices when plugged into a laptop will appear as a
+removable storage device; you can then copy the APK only the Android
+device's internal storage. Once the device is unplugged use the
+pre-installed FileManager to install the new app.</li><ul><li><span style="font-weight: bold;">Note: </span>requires a suitable USB cable</li></ul><li>install
+direct from removable memory card - if the Android device has a
+removable memory card then you can temporarily put this in another
+device (e.g. laptop), copy the APK onto it, return it to the mobile
+device, and use the pre-installed FileManager to install the new app.</li><ul><li><span style="font-weight: bold;">Note: </span>requires that the device supports removable memory card and you have a suitable memory card</li></ul><li>install direct from external USB storage
+- if your device support external USB storage, i.e. USB On The Go
+(OTG), and you have a suitable USB OTG cable and have already installed
+a USB OTG helper application to mount it (or have a FileManager
+installed that supports it directly) then you can copy the APK onto a
+USB drive (or memory card, if you have a&nbsp;USB card reader), plug it
+into the Android device, mount and drive (using the pre-installed
+helper application) and use the pro-installed FileManager to install
+the new app.</li><ul><li><span style="font-weight: bold;">Note: </span>requires USB OTG support, cable and helper app already installed</li></ul></ul></body></html>
