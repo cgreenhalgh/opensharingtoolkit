@@ -1,64 +1,192 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Getting Started with Open Sharing Toolkit for Android</title></head><body><h1>Getting Started with Open Sharing Toolkit for Android</h1><p>This
-document explains how to get the Open Sharing Toolkit onto an Android
-device from a laptop (or PC), and requires either reasonable internet
-access or a complete copy of the required files on the laptop. </p><p>First, you need a suitable&nbsp;Android-based device, e.g. a smart phone or tablet running the Android operating system.&nbsp;</p><p style="margin-left: 40px;">The
-Android device will need to run a suitable version of the Android
-Operating System (I'm not sure what the useful minimum would be at the
-moment...)</p><p style="margin-left: 40px;">The Android device will
-need to have at least one - ideally several - ways of potentially
-exchanging files with other nearby devices, e.g. WiFi, Bluetooth, NFC,
-SD Card slot,&nbsp;USB. Ideally it would have support for WiFi hotspot
-and external USB storage or second memory card slot.&nbsp;</p><p style="margin-left: 40px;">The Android device should also allow you to  install applications from places other than the Google Play Store (see next point). Not all devices support installing apps like this, although many do (it
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Getting Started with Open Sharing Toolkit for Android</title>
+
+</head><body>
+<h1>Getting Started with Open Sharing Toolkit for Android</h1>
+<p>This document explains how to get the Open Sharing Toolkit
+onto an Android device from a laptop (or PC), and requires either
+reasonable internet access or a complete copy of the required files on
+the laptop. </p>
+<h4>Hardware</h4><p>First, you need a suitable&nbsp;Android-based device, e.g.
+a smart phone or tablet running the Android operating system.&nbsp;</p>
+<p style="margin-left: 40px;">The Android device will need
+to run a suitable version of the Android Operating System (I'm not sure
+what the useful minimum would be at the moment...)</p>
+<p style="margin-left: 40px;">The Android device will need
+to have at least one - ideally several - ways of potentially exchanging
+files with other nearby devices, e.g. WiFi, Bluetooth, NFC, SD Card
+slot,&nbsp;USB. Ideally it would have support for WiFi hotspot and
+external USB storage or second memory card slot.&nbsp;</p>
+<p style="margin-left: 40px;">The Android device should
+also allow you to install applications from places other than the
+Google Play Store (see next point). Not all devices support installing
+apps like this, although many do (it
 is sometimes called "side-loading"). Google devices certainly will
 allow this, but you should check before
 buying/selecting a device to use. Otherwise you will have to use the
 Google Play versions of these applications on that device, which you
-will need reasonable internet access to download and install.</p><p>Second,
-assuming that you want to do this off the Internet, you need to allow
-your Android device to install applications from places other than the
-Google Play Store. On the device open "Settings", select "Security" and
-find "Unknown sources"; ensure that this is enabled (e.g. ticked).</p><p style="margin-left: 40px;"><span style="font-weight: bold;">Note</span>: this is not possible on all devices (see above). </p><p>Third, install the FileManager app on the device.&nbsp;</p><p>This version of the OpenSharingKit suggest Open Intents File Manager (<a href="http://www.openintents.org/en/filemanager">http://www.openintents.org/en/filemanager</a>, source <a href="https://github.com/openintents/filemanager">https://github.com/openintents/filemanager</a>, &nbsp;specifically <a href="../src/filemanager-master.zip">../src/filemanager-master.zip</a> from <a href="https://github.com/openintents/filemanager/archive/master.zip">https://github.com/openintents/filemanager/archive/master.zip</a> (2013-06-23), license <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache Version 2.0</a>), one of the most popular OpenSource Android file manager apps. The APK is&nbsp;<a href="../apks/FileManager-2.0.2.apk">../apks/FileManager-2.0.2.apk</a> from&nbsp;<a href="http://openintents.googlecode.com/files/FileManager-2.0.2.apk">http://openintents.googlecode.com/files/FileManager-2.0.2.apk</a> (2013-06-23).</p><p>There
-are four main ways of installing an APK if you don't have a file
-manager installed already, and depending on your device and situation
-only a subset may be possible:</p><ul><li>download the APK to the device from an accessible web server,
+will need reasonable internet access to download and install.</p>
+<h4>Settings</h4><p>Second, assuming that you want to do this off the Internet,
+you need to allow your Android device to install applications from
+places other than the Google Play Store. On the device open "Settings",
+select "Security" and find "Unknown sources"; ensure that this is
+enabled (e.g. ticked).</p>
+<p style="margin-left: 40px;"><span style="font-weight: bold;">Note</span>: this is not
+possible on all devices (see above). </p>
+<h4>File Manager</h4><p>Third, install the FileManager app on the device.&nbsp;</p>
+<p>This version of the OpenSharingKit suggest Open Intents File
+Manager (<a href="http://www.openintents.org/en/filemanager">http://www.openintents.org/en/filemanager</a>,
+source <a href="https://github.com/openintents/filemanager">https://github.com/openintents/filemanager</a>,
+&nbsp;specifically <a href="../src/filemanager-master.zip">../src/filemanager-master.zip</a>
+from <a href="https://github.com/openintents/filemanager/archive/master.zip">https://github.com/openintents/filemanager/archive/master.zip</a>
+(2013-06-23), license <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache
+Version 2.0</a>), one of the most popular OpenSource Android file
+manager apps. The APK is&nbsp;<a href="../apks/FileManager-2.0.2.apk">../apks/FileManager-2.0.2.apk</a>
+from&nbsp;<a href="http://openintents.googlecode.com/files/FileManager-2.0.2.apk">http://openintents.googlecode.com/files/FileManager-2.0.2.apk</a>
+(2013-06-23).</p>
+<h4>Installing an App (APK)</h4><p>There are four main ways of installing an APK if you don't
+have a file manager installed already, and depending on your device and
+situation only a subset may be possible:</p>
+<ul>
+<li>download the APK to the device from an accessible web
+server,
 which could be hosted on another nearby device, or on an external
-server (provided that you can access it with sufficient bandwidth).</li><ul><li><span style="font-weight: bold;">Note: </span>requires
+server (provided that you can access it with sufficient bandwidth).</li>
+<ul>
+<li><span style="font-weight: bold;">Note: </span>requires
 network access to the web server with the APK file on, either over WiFi
 to a local server or over WiFi or 2G/3G data with Internet connectivity
-to a remote server. </li></ul><li>install a version from Google Play,&nbsp;<a href="https://play.google.com/store/apps/details?id=org.openintents.filemanager">https://play.google.com/store/apps/details?id=org.openintents.filemanager</a>&nbsp;</li><ul><li><span style="font-weight: bold;">Note: </span>requires a reasonable Internet connection to the device</li></ul><li>install
-the FileManager APK (Android app file) directly onto the device from a
-laptop/PC using Android Debug Bridge; requires laptop with Android SDK
-installed,&nbsp;platform tools and USB driver downloaded and installed.
-See (internet)&nbsp;<a href="http://developer.android.com/tools/help/adb.html">http://developer.android.com/tools/help/adb.html</a></li><ul><li><span style="font-weight: bold;">Note: </span>requires a laptop with Android SDK and related software installed and a suitable means of connection, typically a USB cable.
-Also note that some devices may not support the Android Debug Bridge,
-while on most devices it will need to be enabled on the mobile device.
-On some devices (e.g. Nexus 7) you will first need to enable the
-"Developer options" within "Settings", by tapping 7 times on the "Build
-number" within the "Settings", "About..." screen. Within "Developer
-options" you will then need to enable "USB debugging".&nbsp; </li></ul><li>send the APK to the device from another nearby device using Bluetooth or NFC</li><ul><li><span style="font-weight: bold;">Note: </span>requires
+to a remote server. </li>
+</ul>
+<li>install a version from Google Play,&nbsp;<a href="https://play.google.com/store/apps/details?id=org.openintents.filemanager">https://play.google.com/store/apps/details?id=org.openintents.filemanager</a>&nbsp;</li>
+<ul>
+<li><span style="font-weight: bold;">Note: </span>requires
+a reasonable Internet connection to the device</li>
+</ul>
+<li>install the FileManager APK (Android app file) directly
+onto the device from a laptop/PC using Android Debug Bridge; requires
+laptop with Android SDK installed,&nbsp;platform tools and USB
+driver downloaded and installed. See (internet)&nbsp;<a href="http://developer.android.com/tools/help/adb.html">http://developer.android.com/tools/help/adb.html</a></li>
+<ul>
+<li><span style="font-weight: bold;">Note: </span>requires
+a laptop with Android SDK and related software installed and a suitable
+means of connection, typically a USB cable. Also note that some devices
+may not support the Android Debug Bridge, while on most devices it will
+need to be enabled on the mobile device. On some devices (e.g. Nexus 7)
+you will first need to enable the "Developer options" within
+"Settings", by tapping 7 times on the "Build number" within the
+"Settings", "About..." screen. Within "Developer options" you will then
+need to enable "USB debugging".&nbsp; </li>
+</ul>
+<li>send the APK to the device from another nearby device using
+Bluetooth or NFC</li>
+<ul>
+<li><span style="font-weight: bold;">Note: </span>requires
 that the Android device and whichever device the APK is on both support
 compatible versions of Bluetooth and/or NFC, including file transfer
 support. Typically you will need to enable Bluetooth on the device and
 make it discoverable (in "Settings", "Bluetooth"). Unfortunately many
 devices do not allow transfer of APKs over Bluetooth by default, and
-require a helper application to be installed before they can (e.g. <a href="https://play.google.com/store/apps/details?id=it.medieval.blueftp&amp;hl=en">https://play.google.com/store/apps/details?id=it.medieval.blueftp</a>).&nbsp; </li></ul></ul>If
-you already have a (different) FileManager app installed then three
-other options may be available if your device supports them:<br><ul><li>install
-direct from internal storage via USB - if you have a suitable USB cable
-then most Android devices when plugged into a laptop will appear as a
-removable storage device; you can then copy the APK only the Android
-device's internal storage. Once the device is unplugged use the
-pre-installed FileManager to install the new app.</li><ul><li><span style="font-weight: bold;">Note: </span>requires a suitable USB cable</li></ul><li>install
-direct from removable memory card - if the Android device has a
-removable memory card then you can temporarily put this in another
-device (e.g. laptop), copy the APK onto it, return it to the mobile
-device, and use the pre-installed FileManager to install the new app.</li><ul><li><span style="font-weight: bold;">Note: </span>requires that the device supports removable memory card and you have a suitable memory card</li></ul><li>install direct from external USB storage
-- if your device support external USB storage, i.e. USB On The Go
-(OTG), and you have a suitable USB OTG cable and have already installed
-a USB OTG helper application to mount it (or have a FileManager
-installed that supports it directly) then you can copy the APK onto a
-USB drive (or memory card, if you have a&nbsp;USB card reader), plug it
-into the Android device, mount and drive (using the pre-installed
-helper application) and use the pro-installed FileManager to install
-the new app.</li><ul><li><span style="font-weight: bold;">Note: </span>requires USB OTG support, cable and helper app already installed</li></ul></ul></body></html>
+require a helper application to be installed before they can (e.g. <a href="https://play.google.com/store/apps/details?id=it.medieval.blueftp&amp;hl=en">https://play.google.com/store/apps/details?id=it.medieval.blueftp</a>).&nbsp;
+</li>
+</ul>
+</ul>
+If you already have a (different) FileManager app installed then three
+other options may be available if your device supports them:<br>
+<ul>
+<li>install direct from internal storage via USB - if you have
+a suitable USB cable then most Android devices when plugged into a
+laptop will appear as a removable storage device; you can then copy the
+APK only the Android device's internal storage. Once the device is
+unplugged use the pre-installed FileManager to install the new app.</li>
+<ul>
+<li><span style="font-weight: bold;">Note: </span>requires
+a suitable USB cable</li>
+</ul>
+<li>install direct from removable memory card - if the Android
+device has a removable memory card then you can temporarily put this in
+another device (e.g. laptop), copy the APK onto it, return it to the
+mobile device, and use the pre-installed FileManager to install the new
+app.</li>
+<ul>
+<li><span style="font-weight: bold;">Note: </span>requires
+that the device supports removable memory card and you have a suitable
+memory card</li>
+</ul>
+<li>install direct from external USB storage - if your device
+support external USB storage, i.e. USB On The Go (OTG), and you have a
+suitable USB OTG cable and have already installed a USB OTG helper
+application to mount it (or have a FileManager installed that supports
+it directly) then you can copy the APK onto a USB drive (or memory
+card, if you have a&nbsp;USB card reader), plug it into the Android
+device, mount and drive (using the pre-installed helper application)
+and use the pro-installed FileManager to install the new app.</li>
+<ul>
+<li><span style="font-weight: bold;">Note: </span>requires
+USB OTG support, cable and helper app (which may require root access)
+already installed</li>
+</ul>
+</ul>
+<h4>Web server</h4>
+<p>Web server, i-Jetty (<a href="https://code.google.com/p/i-jetty/">https://code.google.com/p/i-jetty/</a>),
+APK&nbsp;<a href="../apks/i-jetty-3.1-signed-aligned.apk">../apks/i-jetty-3.1-signed-aligned.apk</a>
+from <a href="https://i-jetty.googlecode.com/files/i-jetty-3.1-signed-aligned.apk">https://i-jetty.googlecode.com/files/i-jetty-3.1-signed-aligned.apk</a>,&nbsp;<a href="../src/i-jetty-3.1-src.tgz">../src/i-jetty-3.1-src.tgz</a>
+from <a href="https://i-jetty.googlecode.com/files/i-jetty-3.1-src.tgz">https://i-jetty.googlecode.com/files/i-jetty-3.1-src.tgz</a>,
+license <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache
+Version 2.0</a></p>
+<p>Some notes on Jetty...</p>
+<ul>
+<li>When installed, Jetty creates a directory jetty/ on the
+sdcard. The subdirectory webapps/ is where Java web apps should be
+placed. If you create a subdirectory in that directory and copy files
+into it then they will be available to download from Jetty. (You might
+need to restart Jetty if you create a new webapp directory.)</li>
+<li>Jetty prints its network addresses on the application
+"console" but this may only become visible after you stop jetty; so you
+may need to start it, stop it (to see the addresses) and start it again.</li>
+<li>WAR files deployed to i-Jetty have to have their .class
+files (including those in any lib/ .jars) converter to .dex first using
+dx - see <a href="https://code.google.com/p/i-jetty/wiki/DownloadableWebapps">https://code.google.com/p/i-jetty/wiki/DownloadableWebapps</a></li>
+<li>A suitable web application would be needed to support file
+upload.</li>
+</ul>
+<h4>QRCode scanner</h4>
+<p>QRCode scanner ZXing (<a href="https://code.google.com/p/zxing/">https://code.google.com/p/zxing/</a>),
+license <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache
+License 2.0</a>. APK&nbsp;<a href="../apks/BarcodeScanner4.3.2.apk">../apks/BarcodeScanner4.3.2.apk</a>
+from <a href="https://zxing.googlecode.com/files/BarcodeScanner4.3.2.apk">https://zxing.googlecode.com/files/BarcodeScanner4.3.2.apk</a>,
+source from <a href="https://code.google.com/p/zxing/source/checkout">https://code.google.com/p/zxing/source/checkout</a></p>
+<h4>eBook Reader</h4>
+<p>Cool Reader (<a href="http://coolreader.org/e-index.htm">http://coolreader.org/e-index.htm</a>),
+dual license, incl. GPL version 2, APK <a href="http://sourceforge.net/projects/crengine/files/CoolReader3/cr3-3.0.45/cr3-0-45-07.apk/download">http://sourceforge.net/projects/crengine/files/CoolReader3/cr3-3.0.45/cr3-0-45-07.apk/download</a>,
+source <a href="http://sourceforge.net/p/crengine/crengine/ci/master/tree/">http://sourceforge.net/p/crengine/crengine/ci/master/tree/</a>.
+Supports:&nbsp;epub (non-DRM), fb2, txt, rtf, html, chm, tcr, doc,
+pdb</p>
+<h4>Com-phone presentation viewer/editor</h4>
+<p>Com-phone (<a href="http://digitaleconomytoolkit.org/com-phone/">http://digitaleconomytoolkit.org/com-phone/</a>),
+source <a href="https://github.com/communitymedia">https://github.com/communitymedia</a>,
+license <a href="http://www.gnu.org/licenses/lgpl.html">LGPL
+version 3</a>. Note: needs compiling - APK only released through <a href="http://play.google.com/store/apps/details?id=ac.robinson.mediaphone">Google
+Play</a>.</p>
+<h4>Open Street Map</h4><p>
+Map data copyright, Open Data Commons Open Database License, imagery
+&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.0/">Creative
+Commons Attribution-ShareAlike 2.0</a>. In PBF format (replacing OSM XML - <a href="http://wiki.openstreetmap.org/wiki/OSM_file_formats">http://wiki.openstreetmap.org/wiki/OSM_file_formats</a>).&nbsp;</p><p>Data?</p><p><a href="http://wiki.openstreetmap.org/wiki/Planet.osm">http://wiki.openstreetmap.org/wiki/Planet.osm</a></p><p>Viewer?</p><p>OsmAnd&nbsp;<a href="https://code.google.com/p/osmand/">https://code.google.com/p/osmand/</a> Release APKs&nbsp;<a href="http://download.osmand.net/releases/">http://download.osmand.net/releases/</a>&nbsp;</p><p><a href="https://code.google.com/p/osmand/wiki/HowToPrepareYourOwnDataToUseOffline">https://code.google.com/p/osmand/wiki/HowToPrepareYourOwnDataToUseOffline</a></p><p>Map server?</p><h4>Terminal</h4><p>Android Terminal Emulator (<a href="https://github.com/jackpal/Android-Terminal-Emulator/wiki">https://github.com/jackpal/Android-Terminal-Emulator/wiki</a> on Play&nbsp;<a href="https://play.google.com/store/apps/details?id=jackpal.androidterm&amp;hl=en">https://play.google.com/store/apps/details?id=jackpal.androidterm&amp;hl=en</a>), Apache license version 2.0, APK <a href="http://jackpal.github.com/Android-Terminal-Emulator/downloads/Term.apk">http://jackpal.github.com/Android-Terminal-Emulator/downloads/Term.apk</a>,&nbsp; source&nbsp;<a href="https://github.com/jackpal/Android-Terminal-Emulator/archive/master.zip">https://github.com/jackpal/Android-Terminal-Emulator/archive/master.zip</a></p><h4>USB mount utility</h4><p>Probably requires Android 3.1+, <a href="http://developer.android.com/guide/topics/connectivity/usb/host.html">http://developer.android.com/guide/topics/connectivity/usb/host.html</a>. Closed app StickMount <a href="http://forum.xda-developers.com/showthread.php?t=1400034">http://forum.xda-developers.com/showthread.php?t=1400034</a> on Play <a href="https://play.google.com/store/apps/details?id=eu.chainfire.stickmount">https://play.google.com/store/apps/details?id=eu.chainfire.stickmount</a>. Requires root. Optionally uses mount.exfat-fuse (<a href="http://manned.org/mount.exfat-fuse/a0101fc7">http://manned.org/mount.exfat-fuse/a0101fc7</a>, <a href="%60http://forum.xda-developers.com/attachment.php?attachmentid=806200&amp;d=1323109372">http://forum.xda-developers.com/attachment.php?attachmentid=806200&amp;d=1323109372</a>) and/or ntfs-3g (<a href="http://forum.xda-developers.com/attachment.php?attachmentid=1145436&amp;stc=1&amp;d=1340293802">http://forum.xda-developers.com/attachment.php?attachmentid=1145436&amp;stc=1&amp;d=1340293802</a>) to support those file-systems.</p><p>
+Basic filesystems should mount OK, but it is a bit hard to know what
+they are... (maybe
+ext2,&nbsp;ext3,&nbsp;ext4,&nbsp;nfs,&nbsp;yaffs,&nbsp;ramfs,&nbsp;vfat(fat32),&nbsp;yaffs2.
+Have to poke around, e.g.&nbsp;<a href="http://technet.microsoft.com/en-us/library/cc776720%28v=ws.10%29.aspx">http://technet.microsoft.com/en-us/library/cc776720(v=ws.10).aspx</a>.
+Maybe od -c will help... yes it does (if you have it - requires root
+and busy box?!). You can mount a supported filesystem from terminal
+(with root) using "mount -t vfat /dev/block/sda1 /sdcard/usb" or
+equivalent. "dmesg" (requires root) should include diagnostic
+information indicated use device once plugged in (if USB OTG is really
+supported on the device).</p><p>Nexus 7 with OTG cable works with USB drive and USB card reader with SDHC cards (all VFAT=FAT32), but not with Samsung Google Nexus phone.</p><h4>Bluetooth file transfer</h4>?<br><h4>Super user utility(s)</h4>I
+unlocked by devices using fastboot oemunlock, installed CWM boot
+manager and used that to sideload a (old) version of SuperSU to gain
+root (and use SuperSU). Fastboot is part of Android SDK platform tools.
+May require some fiddling with USB drivers to work. oem unlock is only
+supported on some devices, e.g. Google badged ones. Others may need to
+use a different rooting strategy.
+ </body></html>
