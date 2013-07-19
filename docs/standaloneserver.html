@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>Standalone server</title>
+
+  
+</head><body>
+<h1>Standalone Server / Access Point <br>
+</h1>
+
+<p>Using an Android device as a standalone (i.e. no Internet
+connectivity) access point and server for locally cached data.... well
+that is the idea, anyway.</p>
+
+<p>Basic requirements:<br>
+</p>
+
+<ul>
+
+  <li>Android device must support AP master mode, typically identified
+as a "hotspot".</li>
+  <li>Android device must run a server (typically a HTTP server) to
+serve content.</li>
+</ul>
+
+As part of the hotspot functionality the Android device will be running
+a DHCP server. On my Samsung Google Nexus this seems to be dnsmasq (it
+runs dhcpcd instead when in client mode). This might be configurable
+via (creating) /system/etc/dnsmasq.conf - see <a href="http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html">http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html</a>
+<ul>
+
+  <li>For use on Android device itself, <span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; display: inline ! important; float: none;">put
+"nameserver 127.0.0.1" in<span class="Apple-converted-space">&nbsp;</span></span><i style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;">/etc/resolv.conf</i></li>
+  <li>Will serve IPs from /etc/hosts</li>
+  <li>Some potentially useful configuration options...<br>
+  </li>
+  <ul>
+    <li><b style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;">resolv-file=&lt;file&gt;</b></li>
+  </ul>
+  <ul>
+    <li><b style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;">address=/&lt;domain&gt;/[domain/]&lt;ipaddr&gt;,
+e.g. </b><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; display: inline ! important; float: none;">address=/#/1.2.3.4
+for any domain<br>
+      </span></li>
+    <li><b style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;">dhcp-authoritative</b></li>
+    <li><b style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;">dhcp-script=&lt;path&gt;</b></li>
+    <li><b style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;">domain=&lt;domain&gt;[,&lt;address
+range&gt;[,local]]</b></li>
+    <li><b style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;">auth-server=&lt;domain&gt;,&lt;interface&gt;|&lt;ip-address&gt;</b></li>
+  </ul>
+</ul>
+
+<p>Note, /system is mounted readonly; to edit will need remounting
+("mount -o remount,rw "-t &lt;type&gt; &lt;dev&gt; /system"); use
+"mount | grep system" to find the &lt;type&gt; and &lt;dev&gt;, e.g. on
+my Google Samsung Nexus (as root):</p>
+
+<p style="margin-left: 40px;">mount -o remount,rw -t ext4
+/dev/block/platform/s3c-sdhci.0/by-name/system /system</p>
+
+<p style="margin-left: 40px;">echo 'address=/#/192.168.43.1' &gt;&gt;
+/system/etc/dnsmasq.conf</p>
+
+<p>OK, well this works. But by default Jetty can't run on port 80, so a
+typical web access still fails. So I need to run jetty as root, or sort
+out iptables. <br>
+</p>
+
+<p>Other things to worry about at some point: <br>
+</p>
+
+<ul>
+
+<li>maybe using WISPR to signal to the device that this is (effectively)
+a capture portal</li>
+  <li>maybe supporting proxy audio discovery, using DHCP (site local option 252 with PAC file URL) or HTTP GET of http://wpad.&lt;domain&gt;/wpad.dat <br>
+  </li>
+
+</ul>
+
+
+<p><br>
+</p>
+
+<p><br>
+</p>
+
+</body></html>
