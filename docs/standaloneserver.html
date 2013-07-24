@@ -1,9 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Standalone server</title>
 
-</head>
-<body>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Standalone server</title></head><body>
 <h1>Standalone Server / Access Point <br>
 </h1>
 <p>Using an Android device as a standalone (i.e. no Internet
@@ -155,4 +153,10 @@ typical web access still fails. So I need to sort
 out iptables (or tun jetty as root - not so nice). <br>
 </p>
 <h3>Web-server Configuration</h3>
-To do... &nbsp;(depending on web server...)</body></html>
+<p>
+To do... &nbsp;(depending on web server...)</p>
+<p>A sample Jetty static file context configuration, would deploy in
+jetty/contexts/ (version 8) or jetty/webapps/ (version 9). Note, change
+contextPath ("/Documents") and resourceBase ("/cmg/...") as required:</p>
+<pre>&lt;?xml version="1.0"  encoding="ISO-8859-1"?&gt;<br>&lt;!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd"&gt;<br><br>&lt;Configure class="org.eclipse.jetty.server.handler.ContextHandler"&gt;<br>  &lt;Call class="org.eclipse.jetty.util.log.Log" name="debug"&gt;&lt;Arg&gt;Configure javadoc.xml&lt;/Arg&gt;&lt;/Call&gt;<br>  &lt;Set name="contextPath"&gt;/Documents&lt;/Set&gt;<br>  &lt;Set name="resourceBase"&gt;/cmg/Android/opensharingtoolkit&lt;/Set&gt;<br>  &lt;Set name="handler"&gt;<br>    &lt;New class="org.eclipse.jetty.server.handler.ResourceHandler"&gt;<br>      &lt;Set name="cacheControl"&gt;max-age=3600,public&lt;/Set&gt;<br>    &lt;/New&gt;<br>  &lt;/Set&gt;<br>&lt;/Configure&gt;<br><br><br></pre>
+</body></html>
