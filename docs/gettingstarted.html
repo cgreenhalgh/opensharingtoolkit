@@ -2,13 +2,18 @@
 <html><head>
 
 
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Getting Started with Open Sharing Toolkit for Android</title></head>
-<body>
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Getting Started with Open Sharing Toolkit for Android</title></head><body>
 <h1>Getting Started with Open Sharing Toolkit for Android</h1>
-<p>This document explains how to get the Open Sharing Toolkit
+<p>This document explains how to get the Open Sharing Toolkit (or whatever...!)
 onto an Android device from a laptop (or PC), and requires either
 reasonable internet access or a complete copy of the required files on
-the laptop. </p>
+the laptop.</p>
+<p>So far it just covers general options/issues for bootstrapping (e.g.
+getting initial applications onto a device) and some potentially useful
+third-party applications.<br>
+ </p>
+
 <h4>Hardware</h4><p>First, you need a suitable&nbsp;Android-based device, e.g.
 a smart phone or tablet running the Android operating system.&nbsp;</p>
 <p style="margin-left: 40px;">The Android device will need
@@ -205,7 +210,10 @@ No public APK outside of google play, and building will need the
 Android native development kit...&nbsp; You'll need internet access not
 only to install the APK but for the APK to download the version of
 BusyBox it wants. BusyBox source <a href="git%20clone%20git://busybox.net/busybox.git">git clone git://busybox.net/busybox.git</a> also required.</p><p>To install offline you'll need a compiled version of busybox, and the on-phone terminal to set it up. </p>
-<p><span style="text-decoration: underline;">Note: needs compiling</span> - see <a href="https://github.com/tias/android-busybox-ndk">https://github.com/tias/android-busybox-ndk</a>&nbsp;</p><p><span style="font-weight: bold;">NOTE I didn't get it to work on Cygwin (problems finding headers), and resorted to building in a Linux (Centos 6) VM</span></p><ol><li>Download Android NDK from <a href="http://developer.android.com/tools/sdk/ndk/index.html">http://developer.android.com/tools/sdk/ndk/index.html</a>, unzip the contents (lets call that &lt;NDK-home&gt;).</li><li>Download busybox source, e.g. <a href="http://busybox.net/downloads/busybox-1.21.1.tar.bz2">http://busybox.net/downloads/busybox-1.21.1.tar.bz2</a> and unpack (1.21.0 might be a better option - see problem with mdev, below)</li><li>Make sure you have make (at least version 3.81), sed and awk/gawk (most likely a full development installation)<span style="font-weight: bold;"></span></li><li>In the busybox source copy configs/android_ndk_defconfig to .config</li><li>Edit .config:</li><ol><li>change CONFIG_SYSROOT to match the location where the Android NDK was unpacked and the platform version you want to use, e.g. "/opt/android-ndk/platforms/android-14/arch-arm"</li><li>(busybox 1.21.1) comment out CONFIG_MDEV=y (gives an error about sigtimedwait undefined; ok on 1.21.0)</li><li>comment out CONFIG_UDHCPC=y (if present)</li></ol><li>Set up the environment to include the relevant toolchain, e.g.<br>PATH=/opt/android-ndk/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86_64/bin:${PATH}<br>export PATH</li><li>build,
+<p><span style="text-decoration: underline;">Note: needs compiling</span> - see <a href="https://github.com/tias/android-busybox-ndk">https://github.com/tias/android-busybox-ndk</a>&nbsp;</p><p><span style="font-weight: bold;">NOTE I didn't get it to work on Cygwin (problems finding headers), and resorted to building in a Linux (Centos 6) VM</span></p><ol><li>Download Android NDK from <a href="http://developer.android.com/tools/sdk/ndk/index.html">http://developer.android.com/tools/sdk/ndk/index.html</a>, unzip the contents (lets call that &lt;NDK-home&gt;).</li><li>Download busybox source, e.g. <a href="http://busybox.net/downloads/busybox-1.21.1.tar.bz2">http://busybox.net/downloads/busybox-1.21.1.tar.bz2</a> and unpack (1.21.0 might be a better option - see problem with mdev, below)</li><li>Make sure you have make (at least version 3.81), sed and awk/gawk (most likely a full development installation)<span style="font-weight: bold;"></span></li><li>In the busybox source copy configs/android_ndk_defconfig to .config</li><li>Edit .config:</li><ol><li>change
+CONFIG_SYSROOT to match the location where the Android NDK was unpacked
+and the platform version you want to use, e.g.
+"/opt/android-ndk/platforms/android-14/arch-arm"</li><li>(busybox 1.21.1) comment out CONFIG_MDEV=y (gives an error about sigtimedwait undefined; ok on 1.21.0)</li><li>comment out CONFIG_UDHCPC=y (if present)</li></ol><li>Set up the environment to include the relevant toolchain, e.g.<br>PATH=/opt/android-ndk/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86_64/bin:${PATH}<br>export PATH</li><li>build,
 and when prompted decline options CONFIG_MDEV &amp; CONFIG_UDHCPC but
 you can (probably - i could) accept other new options (SHA3SUM, EXFAT,
 NILFS, SQUASHFS):<br>make&nbsp;</li></ol>This will create the busybox
