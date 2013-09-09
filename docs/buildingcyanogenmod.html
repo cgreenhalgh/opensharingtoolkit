@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Building CyanogenMod</title>
+
+</head><body>
+<h1>Building CyanogenMod</h1>
+<p>Look for device-specific build information: <a href="http://wiki.cyanogenmod.org/w/Devices">http://wiki.cyanogenmod.org/w/Devices</a>,
+e.g. <a href="http://wiki.cyanogenmod.org/w/Build_for_grouper">http://wiki.cyanogenmod.org/w/Build_for_grouper</a>
+(Nexus 7 WiFi 2012)</p>
+<p>Building on Linux seems to be preferred. If you have a
+Windows/Mac dev machine then consider installing a Linux VM first...</p>
+<h2>Linux VM</h2>
+<p>On Windows at least, try installing <a href="https://www.virtualbox.org/">VirtualBox</a>.</p>
+<p>Create a new virtual machine with (say) <a href="http://www.ubuntu.com/download/desktop/">Ubuntu Desktop</a>
+- 64bit is meant to be best for Android development.</p>
+<ul>
+<li>Nexus 7 CyanogenMod build notes suggest at least 35GB free
+space, so the virtual HDD will need to be at least 45GBish, and more
+RAM the better (although VirtualBox suggests no more than half the
+physical RAM)...</li>
+</ul>
+<p>Install from the downloaded Ubuntu ISO (mount it on the
+VirtualBox virtual CD device). It is then recommended to do "sudo
+apt-get update", "sudo apt-get upgrade".</p>
+<p>Then install VirtualBox host extensions: "sudo apt-get install
+dkms", reboot, and then "Devices &gt; Install guest additions..."
+(see also <a href="http://www.virtualbox.org/manual/ch04.html#idp53088720">guest
+install instructions</a>).&nbsp;</p>
+<p>You will need to configure the USB settings to pass the
+Android device through to the VM: without it plugged in try add USB and
+check the list; plug it in; repeat and add the new device; confirm;
+unplug and re-insert and it should install the VirtualBox USB driver on
+the host and then pass through to the guest (VM). Note that you will
+need to do this again for the device in the bootloader (fastboot mode).</p>
+<h2>IDE</h2>
+<p>You'll probably need an IDE (preferably Eclipse) and JDK. E.g.
+on Ubuntu "sudo apt-get install eclipse".</p>
+<h2>Android SDK</h2>
+<p>Install the SDK, e.g. the SDK only, from <a href="http://developer.android.com/sdk/index.html">http://developer.android.com/sdk/index.html</a>.
+Unzip, and update to get platform tools, etc., e.g. "tools/android
+update sdk --no-ui".</p>
+<p>You should now have platform-tools/adb and
+platform-tools/fastboot...</p>
+<p>You may also need to install some more libraries to get adb
+and fastbook to run (seem to be 32 bit...): "sudo apt-get install
+ia32-libs"</p>
+<p>You should now be able to see the device from Linux, e.g.
+"lsusb" or "adb devices". If the version of Android is new (4.2+?) you
+will need to accept the host once USB Debugging is enabled on the
+device.</p>
+<h2> Build Environment</h2>
+<p>Set up the build environment by installing extra packages,
+e.g. for Nexus 7 as per <a href="http://wiki.cyanogenmod.org/w/Build_for_grouper">http://wiki.cyanogenmod.org/w/Build_for_grouper</a>:</p>
+<p style="margin-left: 40px;">sudo apt-get install
+git-core gnupg flex bison gperf libsdl1.2-dev libesd0-dev
+libwxgtk2.8-dev squashfs-tools build-essential zip curl libncurses5-dev
+zlib1g-dev openjdk-6-jre openjdk-6-jdk pngcrush schedtool libxml2
+libxml2-utils xsltproc g++-multilib lib32z1-dev lib32ncurses5-dev
+lib32readline-gplv2-dev gcc-multilib</p>
+<p>Set up build dirs:</p>
+<p style="margin-left: 40px;">mkdir -p ~/bin<br>
+mkdir -p ~/android/system</p>
+<p>Install repo:</p>
+<p style="margin-left: 40px;">curl
+https://dl-ssl.google.com/dl/googlesource/git-repo/repo &gt;
+~/bin/repo<br>
+chmod a+x ~/bin/repo</p>
+<p>Add ~/bin to PATH:</p>
+<p style="margin-left: 40px;">export PATH=${PATH}:~/bin</p>
+<p>[extra] Initialise GIT config:</p>
+<p style="margin-left: 40px;">git config --global
+user.email "you@example.com"<br>
+git config --global user.name "Your Name"<br>
+</p>
+<p>Initialise the repository (at time of writing stable CM is
+10.2):</p>
+<p style="margin-left: 40px;">cd ~/android/system/<br>
+repo init -u git://github.com/CyanogenMod/android.git -b cm-10.2</p>
+<p>Download source (takes a jolly long time...):</p>
+<p style="margin-left: 40px;">repo sync</p>
+<p>Get prebuilt apps:</p>
+<p style="margin-left: 40px;">cd ~/android/system/vendor/cm</p>
+<p style="margin-left: 40px;">./get-prebuilts</p>
+<p>Get device-specific config and kernel source:</p>
+<p style="margin-left: 40px;">cd ~/android/system<br>source build/envsetup.sh<br>
+breakfast grouper</p><p>Extract proprietary blobs - with device plugged in in USB debugging mode and ALREADY running the version of cm being built!:</p><p style="margin-left: 40px;">cd ~/android/system/device/asus/grouper<br>export PATH=${PATH}:~/android-sdk-linux/platform-tools<br>./extract-files.sh</p><p>Check that some files appear!! apparently this is really important...</p><p>Turn on cache:</p><p style="margin-left: 40px;">export USE_CCACHE=1</p><p>Set up some shell commands [source? cf above]:</p><p style="margin-left: 40px;">cd ~/android/system<br>. build/envsetup.sh</p><h2>Build</h2><p>to build...</p><p style="margin-left: 40px;">croot<br>brunch grouper</p><p></p>
+</body></html>
