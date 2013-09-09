@@ -141,6 +141,8 @@ from <a href="https://i-jetty.googlecode.com/files/i-jetty-3.1-signed-aligned.ap
 from <a href="https://i-jetty.googlecode.com/files/i-jetty-3.1-src.tgz">https://i-jetty.googlecode.com/files/i-jetty-3.1-src.tgz</a>,
 license <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache
 Version 2.0</a> (Jetty for desktop machine, e.g.&nbsp;<a href="http://download.eclipse.org/jetty/stable-9/dist/">http://download.eclipse.org/jetty/stable-9/dist/</a>).</p>
+<p>Build notes for Jetty: <a href="http://code.google.com/p/i-jetty/wiki/BuildInstructions">http://code.google.com/p/i-jetty/wiki/BuildInstructions</a>. But note that you may need to delete i-jetty-ui/res/layout-xlarge-land, and you will need to edit i-jetty-ui/pom.xml and change the reference to maven-android-plugin to android-maven-plugin and the version from 2.9.... to 3.6.1.</p>
+<p>But how can you make it start up automatically?</p>
 <p>Some notes on Jetty...</p>
 <ul>
 <li>When installed, Jetty creates a directory jetty/ on the
