@@ -150,11 +150,13 @@ For desktop testing regular Jetty is available, e.g. [jetty 9](http://download.e
 
 There seems to be an intermittent (or initial) problem with uploading images, perhaps due to the media directory (by default in placebooks/); I'm not sure when/how this resolves itself at the moment. 
 
-To deploy to i-jetty on Android all Java class files must be converted with DEX. These can then be zipped up together in (say) WEB-INF/lib/classes.dex. E.g. something like the following added to the build.xml, called before "ant war":
+To deploy to i-jetty on Android all Java class files must be converted with DEX. These can then be zipped up together in (say) WEB-INF/lib/classes.dex. This was what their how-to suggested, although the i-jetty class loader source looks like it picks up any .zip files (but not .dex files). Anyway, I couldn't get dex to handle all of the jar files together due to its 64K limits, even with --force-jumbo. I then tried converting each jar separately, which completed, but start up of the war failed due to problems with the XML parsing of the configuration files (reporting XSD validation unsupported). Check logcat for error messages.
+
+Well, here was the build.xml stuff, just in case...
 
 	<!-- dex for Android i-jetty -->
 	<target name="dex" description="dex class file for Android" depends="compile">
-		<mkdir dir="${warfile.dir}/dexclasses"/>
+		<!-- <mkdir dir="${warfile.dir}/dexclasses"/>
 		<unzip dest="${warfile.dir}/dexclasses">
 			<patternset>
 				<include name="**/*.class"/>
@@ -163,29 +165,60 @@ To deploy to i-jetty on Android all Java class files must be converted with DEX.
 				<include name="*.jar"/>
 			</fileset>
 		</unzip>
+		
 		<copy todir="${warfile.dir}/dexclasses">
 			<fileset dir="${war.dir}/WEB-INF/classes">
 				<include name="**/*.class"/>
 			</fileset>
 		</copy>	
-
-		<!-- dex tool from android-sdk -->
-		<java jar="${dx.jar}" fork="true">
-			<jvmarg value="-Xmx2048M"/>
+		-->
+		<!-- dex tool from android-sdk, Note jumbo requires dex from android version at least 17 - -core-library ? - -verbose ? -->
+		<!-- note: can't cope with converting all libs together to one dex (too many methods, etc.) but i-jetty should cope with multiple .zip files in lib each containing dex files. -->
+		<!-- <java jar="${dx.jar}" fork="true">
+			<jvmarg value="-Xmx4048M"/>
 			<jvmarg value="-Xms512M"/>
-                 	<arg value="--dex"/>
- 	        	<arg value="--verbose"/>
-                	<arg value="--core-library"/>
-                	<arg value="--output=${war.dir}/WEB-INF/lib/classes.dex"/>
-                	<arg value="--positions=lines"/>
+			<jvmarg value="-XX:-UseGCOverheadLimit"/>
+                	<arg value="- -dex"/>
+                	<arg value="- -incremental"/>
+                	<arg value="- -force-jumbo"/>
+                	<arg value="- -output=${war.dir}/WEB-INF/lib/classes.dex"/>
+                	<arg value="- -positions=lines"/>
                 	<arg value="${warfile.dir}/dexclasses/"/>
+		</java> -->
+		<java jar="${dx.jar}" fork="true">
+			<jvmarg value="-Xmx4048M"/>
+			<jvmarg value="-Xms512M"/>
+			<jvmarg value="-XX:-UseGCOverheadLimit"/>
+                	<arg value="--dex"/>
+                	<arg value="--incremental"/>
+                	<arg value="--output=${war.dir}/WEB-INF/lib/classes.zip"/>
+                	<arg value="--positions=lines"/>
+                	<arg value="${war.dir}/WEB-INF/classes/"/>
 		</java>
+		<foreach target="dexjar" param="thejar">
+ 			<fileset dir="${war.dir}/WEB-INF/lib/">
+				<include name="**/*.jar"/>
+			</fileset>
+  		</foreach>
+	</target>
 
+	<target name="dexjar">	
+		<echo>dex ${thejar}</echo>
+		<java jar="${dx.jar}" fork="true">
+			<jvmarg value="-Xmx4048M"/>
+			<jvmarg value="-Xms512M"/>
+			<jvmarg value="-XX:-UseGCOverheadLimit"/>
+                	<arg value="--dex"/>
+                	<arg value="--incremental"/>
+                	<arg value="--output=${thejar}.zip"/>
+                	<arg value="--positions=lines"/>
+                	<arg value="${thejar}"/>
+		</java> 
 	</target>
 
 Note: I had to increase dex memory for it to work (as above). Also note dex.jar is in different locations for different versions of the Android platform - try "find"...
 
-Status: still waiting for dex to succeed.
+Status: given up, at least for the time being. Perhaps try running the placebooks server on a separate plug computer running standard linux/Java.
 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
 ### Kiosk view
 
@@ -220,5 +253,5 @@ Tries to read from /data/local/bootanimation.zip, else /system/media/bootanimati
 
 ### Limit internet access
 
-Is there support for tc? In the kernel? 
+Is there support for tc? In the kernel? The command seems to be present but I haven't tried anything yet...
 
