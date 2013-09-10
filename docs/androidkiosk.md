@@ -144,6 +144,7 @@ Here are some build notes...
 
 *	src/placebooks.properties contains some application properties. This includes server URL, persistence information, proxy configuration (if any), map server configuration, configuration of other external services. Currently this needs to be copied by hand to war/WEB-INF/classes/ before "ant war".
 *	minimum ant build targets are "ant compile.gwt war"
+*	Dex doesn't seem happy with Java 7 class files: add source="1.6" target="1.6" to javac tasks in build.xml.
 
 For desktop testing regular Jetty is available, e.g. [jetty 9](http://download.eclipse.org/jetty/stable-9/dist/). The generated placebooks.war can be copied directly to jetty's webapps/ directory for desktop use.
 
@@ -185,7 +186,7 @@ To deploy to i-jetty on Android all Java class files must be converted with DEX.
 Note: I had to increase dex memory for it to work (as above). Also note dex.jar is in different locations for different versions of the Android platform - try "find"...
 
 Status: still waiting for dex to succeed.
-
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
 ### Kiosk view
 
 I was just thinking of an app which is a full screen web view...
@@ -207,9 +208,17 @@ As an alternative to disabling the soft keys you can avoid starting any other ap
 
 ### Custom time-out and lock
 
+For a kiosk, probably just disable lock screen, i.e. lock screen 'none' in settings.
+
+Need to thing about screen time and app behaviour though...
+See PowerManager, and intents ACTION_SCREEN_ON and ACTION_SCREEN_OFF. wake locks SCREEN_DIM_WAKELOCK, SCREEN_BRIGHT_WAKELOCK. (There is also some kind of keyguard wakelock that would also prevent lock.) 
+Also WindowManager.LayoutParameters.FLAG_KEEP_SCREEN_ON. Also options to avoid (insecure) keyguard and show immediately. Presumably programatically fiddle with brightness settings.
 
 ### Custom boot animation
 
+Tries to read from /data/local/bootanimation.zip, else /system/media/bootanimation.zip. See [this explanation](http://www.droidforums.net/forum/droid-hacks/33932-bootanimation-zip-file-explained.html) - requires simple text config and one or more 'part' directories each with a sequence of images in it.
+
 ### Limit internet access
 
+Is there support for tc? In the kernel? 
 
