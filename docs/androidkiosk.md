@@ -104,6 +104,20 @@ Note: hotspot is NOT automatically re-enabled after reboot, even if it was runni
 
 ### Web server
 
+A web server is required to serve content and interfaces to other devices over the wireless network. It could also be used to host services accessed via other local interfaces in a reasonably portable way, e.g. a javascript-based browser interface on the tablet with the back-end functionality implemented in a web server.
+
+Options include:
+
+* J2EE web appplication server, e.g. Jetty
+* Python, e.g. bottle (sp?)
+* OCaml / Mirage (experimental project)
+* PHP and (e.g.) lighttpd
+
+#### Jetty Java Web Server
+
+Status: Jetty works for at least some web applications, but I haven't managed to make it work (yet) for the Placebooks webapp that I wanted to use, so I have set it aside for now as the default web server.
+
+
 The first test service is [Placebooks](https://github.com/horizon-institute/Bridging-the-Rural-Divide--Placebooks) which is based on a J2EE web service. So the web server being tried is Jetty, more specifically the Android Jetty port/hosting app [i-Jetty](http://code.google.com/p/i-jetty/), which is open source.
 
 The i-Jetty [Build Instructions](http://code.google.com/p/i-jetty/wiki/BuildInstructions) are mostly correct, but it seems to be necessary to edit i-jetty/i-jetty-ui/pom.xml and change it to use a more recent android-maven-plugin, i.e. change:
@@ -124,7 +138,23 @@ to
 
 i-Jetty does not have a configuration option to start at boot, so this will probably need to be added, e.g. a configuration option to start on the booted broadcast intent.
 
-### Placebooks web service
+#### Python
+
+e.g. bottle (sp?)...?
+
+#### OCaml / Mirage
+
+(experimental project)...?
+
+#### PHP
+
+and (e.g.) lighttpd...?
+
+### Applications
+
+#### Placebooks web service
+
+Status: given up, at least for the time being. Perhaps try running the placebooks server on a separate plug computer running standard linux/Java.																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
 
 [Placebooks](https://github.com/horizon-institute/Bridging-the-Rural-Divide--Placebooks) is based on a J2EE web service, the source of which is in the placebooks-webapp subdirectory. 
 
@@ -218,13 +248,13 @@ Well, here was the build.xml stuff, just in case...
 
 Note: I had to increase dex memory for it to work (as above). Also note dex.jar is in different locations for different versions of the Android platform - try "find"...
 
-Status: given up, at least for the time being. Perhaps try running the placebooks server on a separate plug computer running standard linux/Java.
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
 ### Kiosk view
 
 I was just thinking of an app which is a full screen web view...
 
-### Prevent leaving app to home
+See [opensharingtoolkit-kiosk](https://github.com/cgreenhalgh/opensharingtoolkit-kiosk) on github (work in progress...).
+
+#### Prevent leaving app to home
 
 Some stuff on [stackoverflow](http://stackoverflow.com/questions/2068084/kiosk-mode-in-android), but here is a complete [how-to](http://thebitplague.wordpress.com/2013/04/05/kiosk-mode-on-the-nexus-7/):
 
@@ -237,9 +267,7 @@ Potentially also (from the Stackoverflow article) "to stop any other programs fr
 
 As an alternative to disabling the soft keys you can avoid starting any other apps (so app list empty), and handle back.
 
-### OSM Map Server
-
-### Custom time-out and lock
+#### Custom time-out and lock
 
 For a kiosk, probably just disable lock screen, i.e. lock screen 'none' in settings.
 
@@ -247,9 +275,15 @@ Need to thing about screen time and app behaviour though...
 See PowerManager, and intents ACTION_SCREEN_ON and ACTION_SCREEN_OFF. wake locks SCREEN_DIM_WAKELOCK, SCREEN_BRIGHT_WAKELOCK. (There is also some kind of keyguard wakelock that would also prevent lock.) 
 Also WindowManager.LayoutParameters.FLAG_KEEP_SCREEN_ON. Also options to avoid (insecure) keyguard and show immediately. Presumably programatically fiddle with brightness settings.
 
-### Custom boot animation
+#### Custom boot animation
 
 Tries to read from /data/local/bootanimation.zip, else /system/media/bootanimation.zip. See [this explanation](http://www.droidforums.net/forum/droid-hacks/33932-bootanimation-zip-file-explained.html) - requires simple text config and one or more 'part' directories each with a sequence of images in it.
+
+Note: the files in bootanimation.zip MUST NOT be compressed.
+
+### OSM Map Server
+
+To serve map data with little or no internet connectivity...
 
 ### Limit internet access
 
