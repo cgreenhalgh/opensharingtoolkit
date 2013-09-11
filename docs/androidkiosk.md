@@ -140,11 +140,18 @@ i-Jetty does not have a configuration option to start at boot, so this will prob
 
 #### Python
 
-e.g. bottle (sp?)...?
+A reasonable default seems to be [python-for-android](http://code.google.com/p/python-for-android/) which is intended for use with [Scripting Layer for Android, SL4A](http://code.google.com/p/android-scripting/).
+
+e.g. [bottle](http://bottlepy.org/docs/dev/). [This](https://github.com/schlamar-unmaintained/droidbottle) might have some useful tips/pointers for increasing usability.
 
 #### OCaml / Mirage
 
-(experimental project)...?
+[Mirage](http://openmirage.org/) is an experimental "unikernel" project using Ocaml, i.e. compiles applications to bootable VM images suitable for Xen (or to a Unix process for testing/development).
+
+[Keigo](https://sites.google.com/site/keigoattic/ocaml-on-android) seems to be the root of much OCaml on Android work. His patch is Ocaml 3.12.1 (and NDK n7). He also wrote an initial [top-level](https://bitbucket.org/keigoi/ocaml-toplevel-android/src). This include [vouillon](https://github.com/vouillon/ocaml-android) which was active approx. Feb 2013, and Vernoux's [Ocaml top-level for Android](https://play.google.com/store/apps/details?id=fr.vernoux.ocaml&hl=en). 
+
+Vouillon's version appears to be Ocaml 4.00.1 and include LWT according to [this post](https://sympa.inria.fr/sympa/arc/caml-list/2013-01/msg00173.html). He also has an [Opam respository](https://github.com/vouillon/opam-android-repository/) for this.
+
 
 #### PHP
 
