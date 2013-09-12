@@ -156,10 +156,11 @@ More Mirage on the Xen Wiki: [Mirage architecture](http://wiki.xenproject.org/wi
 
 A few notes on getting started with Mirage as of 2013-09-12:
 
-* it wasn't obvious from the introductory documentation that you can't opam install mirage-xen and mirage-unix at the same time, so if you have installed for one target (or mirari has done for you) then you need to "opem remove ..." it before you can install/build for the other target.
-* mirari 0.9.7 seems to require --socket as an explicit argument whereas some documentation suggests it was s default before (now defaults to direct).
+* Right now, this seems to be the most complete/up-to-data [install guide](http://openmirage.org/wiki/install)
+* it wasn't obvious from the introductory documentation on the Xen wiki that you can't opam install mirage-xen and mirage-unix at the same time, so if you have installed for one target (or mirari has done for you) then you need to "opam switch ..." (and/or "opem remove ..." it) before you can install/build for the other target.
+* mirari 0.9.7 seems to require --socket as an explicit argument whereas some documentation suggests it was the default before (now defaults to direct?!).
 * mirage 0.9.6 doesn't seem to print console output; had to use Mort's version, https://github.com/mor1/mirage
-* mirage is now a kind of virtual target, and the actual building is done by mirage-unix (or mirage-xen); consequently you have to opam pin mirage-unix as well or instead of mirage to get that version
+* mirage is a kind of virtual package in opam, and the actual building is done by mirage-unix (or mirage-xen); consequently you have to opam pin mirage-unix as well or instead of mirage to get that version
 * most of the [mirage-skeleton examples](https://github.com/mirage/mirage-skeleton) compile and run, including basic and the simple web server, but some don't (I've only tried the UNIX socket targets).
 
 Trying Vouillon's cross compiler:
