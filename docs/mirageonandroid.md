@@ -217,7 +217,12 @@ Was OK once (why??); no more:
 /tmp/ccwwXn9Q.s: Assembler messages:
 /tmp/ccwwXn9Q.s:23: Error: selected processor does not support ARM mode `dmb'
 
-What processor?? Time to look in ocaml-android, I suppose...
+What processor?? Time to look in ocaml-android, I suppose... 
+[Apparently](http://www.raspberrypi.org/phpBB3/viewtopic.php?t=23616&p=322295) dmb is Armv7, build is using NDK platform 14.
+Allegedly, this is a portable alternative (Linux  __kuser_memory_barrier)...
+	mov r2, #0xffff0fa0
+	blx r2
+
 
 #### ounit
 
