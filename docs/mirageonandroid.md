@@ -198,21 +198,13 @@ Part of core system built by ocaml-android (?!)
 #### shared-memory-ring
 
 [archive](https://github.com/mirage/shared-memory-ring/archive/shared-memory-ring-0.4.1.tar.gz)
+[git](https://github.com/mirage/shared-memory-ring.git)
 
 Build: make all; make install.
 
-Has _oasis. Has native code, including architecture-dependent __asm__ - checks for defined __i386__ __x86_64__ __arm__ ... - will probably need patching, or something custom to set target architecture.
+Has _oasis. Has native code, including architecture-dependent __asm__ - checks for defined __i386__ __x86_64__ __arm__ ...
 
-Hopefully just getting the cross-compiler used will set this correctly?!
-
-Oasis build for target...
-	#	oasis setup
-	ocaml setup.ml -configure --override ocamlfind `opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
-	ocaml setup.ml -build
-	ocaml setup.ml -install
-
-Was OK once (why??); no more:
-
+Initially:
 + /home/pszcmg/.opam/4.00.1.android/bin/arm-linux-androideabi/ocamlfind ocamlc -c lib/barrier_stubs.c
 /tmp/ccwwXn9Q.s: Assembler messages:
 /tmp/ccwwXn9Q.s:23: Error: selected processor does not support ARM mode `dmb'
@@ -222,7 +214,34 @@ What processor?? Time to look in ocaml-android, I suppose...
 Allegedly, this is a portable alternative (Linux  __kuser_memory_barrier)...
 	mov r2, #0xffff0fa0
 	blx r2
+According to [this](https://wiki.edubuntu.org/ARM/Thumb2PortingHowto) __sync_synchronize is available from GCC 4.4.3 and Linux 2.6.19.
+[Some notes](https://android.googlesource.com/platform/ndk/+/ics-mr0/docs/STANDALONE-TOOLCHAIN.html) on cflags for specifying v7 support (which I don't actually want at the moment).
+Compiler defines for ARM, seem to include  defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__)
+Maybe do this in lib/barrier.h:
 
+	#elif defined(__arm__)
+	#if defined(__ARM_ARCH_7__) \
+		|| defined(__ARM_ARCH_7A__) \
+		|| defined(__ARM_ARCH_7M__) \
+		|| defined(__ARM_ARCH_7R__) \
+		|| defined(__ARM_ARCH_7S__)
+	#define xen_mb()   asm volatile ("dmb" : : : "memory")
+	#define xen_rmb()  asm volatile ("dmb" : : : "memory")
+	#define xen_wmb()  asm volatile ("dmb" : : : "memory")
+	#else
+	/* gcc since 4.4.3?! */
+	#define xen_mb()   __sync_synchronize()
+	#define xen_rmb()   __sync_synchronize()
+	#define xen_wmb()   __sync_synchronize()
+	#endif
+ 
+See [this fork](https://github.com/cgreenhalgh/shared-memory-ring.git)
+
+Oasis build for target...
+	#	oasis setup
+	ocaml setup.ml -configure --override ocamlfind `opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
+	ocaml setup.ml -build
+	ocaml setup.ml -install
 
 #### ounit
 
@@ -258,20 +277,24 @@ Oasis build for target...
 #### tuntap
 
 [archive](https://github.com/mirage/ocaml-tuntap/archive/0.6.tar.gz)
+[git](https://github.com/mirage/ocaml-tuntap/)
 
 Build: make "PREFIX=%{prefix}%"; make "PREFIX=%{prefix}%" "install"
 
 Has _oasis.
+
+lib/tuntap_stubs.c:30:21: fatal error: ifaddrs.h: No such file or directory
+This defines getifaddrs and freeifaddrs
+Seems to be known - this might fix it [getifaddrs for android](https://github.com/kmackay/android-ifaddrs)
+Not sure how to set up conditional compilation at the moment though, or to get compiler to add lib/ to C-compiler include path...
+
+[git fork](https://github.com/cgreenhalgh/ocaml-tuntap)
 
 Oasis build for target...
 	# needs setup
 	oasis setup
 	ocaml setup.ml -configure --override ocamlfind `opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
 	ocaml setup.ml -build
-lib/tuntap_stubs.c:30:21: fatal error: ifaddrs.h: No such file or directory
-This defines getifaddrs and freeifaddrs
-Seems to be known - this might fix it [getifaddrs for android](https://github.com/kmackay/android-ifaddrs)
-Not sure how to set up conditional compilation at the moment though, or to get compiler to add lib/ to C-compiler include path...
 
 	ocaml setup.ml -install
 
