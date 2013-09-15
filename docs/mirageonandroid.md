@@ -289,13 +289,13 @@ Seems to be known - this might fix it [getifaddrs for android](https://github.co
 Not sure how to set up conditional compilation at the moment though, or to get compiler to add lib/ to C-compiler include path...
 
 [git fork](https://github.com/cgreenhalgh/ocaml-tuntap)
+Note, no TUNSETGROUP, as well as replacement for getifaddrs and tweak for broadcast.
 
 Oasis build for target...
 	# needs setup
 	oasis setup
 	ocaml setup.ml -configure --override ocamlfind `opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
 	ocaml setup.ml -build
-
 	ocaml setup.ml -install
 
 
@@ -315,6 +315,12 @@ Makefile uses cmd. Configure -> "configure unix".
 Requires (ocamlfind) cstruct cstruct.syntax lwt lwt.syntax lwt.unix tuntap ipaddr.
 
 Has native files; one checksum speedup; other tap_stubs_linux which just emits an error if pcap_opendev called! Apparently this functionality was replaced by ocaml tuntap. 
+
+Override OCAMLFIND environment variable:
+
+export OCAMLFIND=`opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
+
+Doesn't work - still fails in build.
 
 #### mirage
 
