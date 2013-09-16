@@ -29,24 +29,35 @@ A few notes on getting started with Mirage on Unix as of 2013-09-12:
 
 Vouillon's version appears to be Ocaml 4.00.1 and include LWT according to [this post](https://sympa.inria.fr/sympa/arc/caml-list/2013-01/msg00173.html). He also has an [Opam respository](https://github.com/vouillon/opam-android-repository/) for this.
 
-Trying Vouillon's cross compiler:
+OK, here is my [fork of vouillon's android opam repo](https://github.com/cgreenhalgh/opam-android-repository). 
 
-* do "opam switch", e.g. "opam switch 4.00.1" or "opam switch install 4.00.1android --alias-of 4.00.1" (so that you are using a compiler within opam, not just the system default).
-* add repo as per github readme: "opam repo add android https://github.com/vouillon/opam-android-repository.git"
-* "opam install ocaml-android"
-* One package in Vouillon's opam repository have hard-coded paths, e.g. https://github.com/vouillon/opam-android-repository/blob/master/packages/android-lwt.2.4.3/opam has "/home/jerome/.opam/4.00.1/bin/arm-linux-androideabi-ocamlfind". Edit in ~/.opam/repo/android/packages/android-lwt.2.4.3/opam to "%{prefix}%/bin/arm-linux-androideabi-ocamlfind" and then run "opam update" (before trying to install android-lwt).
-* "opam install android-lwt"
+Problems with Vouillon's opam/cross compiler:
+* 4.00.1 ocamlbuild does NOT Use ocamlfind for ocamlmklib and does NOT include -ocamlmklib override option. Hopefully fixed in [this ocamlbuild patch](https://github.com/cgreenhalgh/ocaml/commit/f617a0fb82421e3da2f7ea849b5d83c3a3c416fa.patch) and applied by my opam compiler spec 4.00.1+mirage-android in [my opam repo](https://github.com/cgreenhalgh/opam-android-repository).  
+* One package in Vouillon's opam repository have hard-coded paths, i.e. https://github.com/vouillon/opam-android-repository/blob/master/packages/android-lwt.2.4.3/opam has "/home/jerome/.opam/4.00.1/bin/arm-linux-androideabi-ocamlfind". Edit in ~/.opam/repo/android/packages/android-lwt.2.4.3/opam to "%{prefix}%/bin/arm-linux-androideabi-ocamlfind"; fixed in [my opam repo](https://github.com/cgreenhalgh/opam-android-repository). 
+* android-ocamlfind doesn't specific an ocamlfind version and should (1.3.3): edit ~/.opam/repo/android/packages/android-ocamlfind.1.3.3/opam. Fixed in [my opam repo](https://github.com/cgreenhalgh/opam-android-repository). 
+* Ocaml-android doesn't seem to use toolchain ld in config/Makefile PARTIALLD (blows up in mirage-platform). Fixed in [my fork of ocaml-android](https://github.com/cgreenhalgh/ocaml-android) [0.1.10-ld](https://github.com/cgreenhalgh/ocaml-android/archive/0.1.10-ld.tar.gz) and referenced in [my opam repo](https://github.com/cgreenhalgh/opam-android-repository). 
+* android-ocamlfind (opam files/Android.conf.in) is missing ldconf(android) from findlib.conf.d/android.conf (should be .../arm-linux-androideabi/lib/ocaml/ld.conf), so that it mixes up host and target libraries. Fixed in [my opam repo](https://github.com/cgreenhalgh/opam-android-repository).
+
+Build with my fork of opam repo:
+* add repo as per github readme: "opam repo add android https://github.com/cgreenhalgh/opam-android-repository.git"
+* "opam switch 4.00.1+mirage-android" - includes ocamlbuild patch from [my ocaml fork](https://github.com/cgreenhalgh/ocaml) which should make ocamlbuild use ocamlfind for ocamlmklib for correct toolchain support
+* "opam ocaml-android" - includes my fix for using toolchain ld
+* "opam install android-ocamlfind"
 
 To test it out try the instructions under Test on [Keigo's page](https://sites.google.com/site/keigoattic/ocaml-on-android)... but (having used opam) 
 
-* with ocamlrun ~/.opam/4.00.1.android/arm-linux-androideabi/bin/, 
-* ocaml in ~/.opam/4.00.1.android/arm-linux-androideabi/ and 
-* stdlib files in ~/.opam/4.00.1.android/build/ocaml/stdlib (adjust for your chosen compiler version).
-* The bin dir with ocamlopt is ~/.opam/4.00.1.android/bin/arm-linux-androideabi.
+	echo 'print_endline "Hello, OCaml-Android!";;' > hello.ml
+	ocamlfind -toolchain android ocamlopt hello.ml -o hello
+	file hello
+	adb push hello /data/local/tmp
+	adb shell /data/local/tmp/hello
+	> Hello, OCaml-Android!
 
-Interpreter and native both work for me ;-)
+* "opam install android-lwt" - includes fix for path in opam repo.
 
-I'm not sure that camlp4 is visible initially (i.e. after ocaml-android) but it does seem to be after installing android-lwt. Note that it adds a symlink to camlp4 libraries on the system in $(ANDROID_PREFIX)/lib/ocaml/camlp4 (since these will be running on the host, not the target). 
+Note ocaml-android adds a symlink to camlp4 libraries on the system in $(ANDROID_PREFIX)/lib/ocaml/camlp4 (since these will be running on the host, not the target). 
+
+Note that (as reported in the [readme](https://github.com/vouillon/ocaml-android)) there is a problem building/running bytecode executables made with ocaml-android.
 
 ## Notes on Building Mirage
 
@@ -91,7 +102,17 @@ For Unix, mirari build just calls "make build" and links the native executable t
 
 ### Package specific details
 
+Hopefully in build/dependency order...
+
+Fixes should be migrated into [my opam repo](https://github.com/cgreenhalgh/opam-android-repository).
+
 #### fd-send-recv
+
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-fd-send-recv".
+
+See [variant archive](https://github.com/cgreenhalgh/ocaml-fd-send-recv/tree/ocaml-fd-send-recv-1.0.1-nostatvfs) where I have removed include of statvfs.h. 
+
+##### Working notes:
 
 [archive]("https://github.com/xen-org/ocaml-fd-send-recv/archive/ocaml-fd-send-recv-1.0.1.tar.gz")
 
@@ -114,6 +135,10 @@ See [git fork](https://github.com/cgreenhalgh/ocaml-fd-send-recv/tree/ocaml-fd-s
 
 #### optcomp
 
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-optcomp".
+
+##### Working notes:
+
 [archive](https://forge.ocamlcore.org/frs/download.php/1011/optcomp-1.4.tar.gz)
 
 Version 1.4. Required by ocplib-endian. 
@@ -132,6 +157,10 @@ Now try and make the android toolchain think it has it too - let's try the follo
 
 #### ocplib-endian
 
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-ocplib-endian".
+
+##### Working notes
+
 [ocplib-endian](https://github.com/OCamlPro/ocplib-endian 
 [archive](https://github.com/OCamlPro/ocplib-endian/archive/0.4.tar.gz)
 
@@ -148,6 +177,8 @@ Trying...
 Seemed to work.
 
 #### cstruct
+
+TODO: add to my opam repo ... (and following)
 
 [cstruct](https://github.com/mirage/ocaml-cstruct)
 [archive](https://github.com/mirage/ocaml-cstruct/archive/ocaml-cstruct-0.7.1.tar.gz)
@@ -251,12 +282,26 @@ Build: make build; make install
 
 Has _oasis. Makefile accepts BUILDFLAGS and INSTALLFLAGS. No native code.
 
+Default build includes a test executable, defaulting to bytecode; this will fail with current ocaml-android compiler (as per [readme](https://github.com/vouillon/ocaml-android) problems). So one option is to edit _oasis and add the CompiledObject bit to the test build info:
+
+	Executable test
+	  Path:   test
+	  MainIs: test.ml
+	  BuildDepends: oUnit
+	  Install: false
+	  CompiledObject: native
+  
 Oasis build for target...
 	# oasis setup
 	ocaml setup.ml -configure --override ocamlfind `opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
 	ocaml setup.ml -build
 	ocaml setup.ml -install
 
+Otherwise test fails...
++ /home/pszcmg/.opam/4.00.1.android/bin/arm-linux-androideabi/ocamlfind ocamlc -g -linkpkg -package unix src/oUnit.cma test/test.cmo -o test/test.byte
+File "_none_", line 1:
+Error: Error on dynamically loaded library: /home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/ocaml/stublibs/dllunix.so: /home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/ocaml/stublibs/dllunix.so: cannot open shared object file: No such file or directory
+Command exited with code 2.
 
 #### ipaddr
 
@@ -266,7 +311,7 @@ Oasis build for target...
 
 Build: "ocaml" "setup.ml" "-configure" "--prefix" "%{prefix}%"; make "build"; make "install"
 
-Has _oasis. No native code. 
+Has _oasis. No native code. Tests don't use configuration or library (just build/run on host).
 
 Oasis build for target...
 	oasis setup
@@ -312,15 +357,41 @@ Makefile calls relevant sub-dir make, i.e. unix/ ...
 Has configure.os script which does (host)OS-specific C-flag setting and selects tap_stubs_linux.c or tab_stubs_macosx.c.
 Makefile uses cmd. Configure -> "configure unix".  
 
+Has _vars and uses cmd to create _config/ used by ocamlbuild. Has myocamlbuild.ml. Has _tags.
+
 Requires (ocamlfind) cstruct cstruct.syntax lwt lwt.syntax lwt.unix tuntap ipaddr.
 
 Has native files; one checksum speedup; other tap_stubs_linux which just emits an error if pcap_opendev called! Apparently this functionality was replaced by ocaml tuntap. 
 
-Override OCAMLFIND environment variable:
+perhaps we can compile myocamlbuild.ml first ourselves...
 
-export OCAMLFIND=`opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
+	make clean
+	ocamlbuild -just-plugin
 
-Doesn't work - still fails in build.
+try..
+	cat `opam config var prefix`/lib/findlib.conf.d/android.conf  | sed -e 's/(android)//g' > android.conf
+	export  OCAMLFIND_CONF=~/mirage/mirage-platform-0.9.6/unix/android.conf 
+
+	make build
+	make install
+
+If you get the following then you are missing the LD fix in ocaml-android (above):
++ touch lib/oS.mli  ; if  /home/pszcmg/.opam/4.00.1.android/bin/ocamlfind ocamlopt -pack -I lib lib/env.cmx lib/io_page.cmx lib/clock.cmx lib/time.cmx lib/console.cmx lib/main.cmx lib/devices.cmx lib/netif.cmx -o lib/oS.cmx  ; then  rm -f lib/oS.mli  ; else  rm -f lib/oS.mli  ; exit 1; fi
+ld: /tmp/camlOS__d5a98e.o: Relocations in generic ELF (EM: 40)
+/tmp/camlOS__d5a98e.o: could not read symbols: File in wrong format
+File "lib/oS.cmx", line 1:
+Error: Error during partial linking
+
+This is bad (causes final app not to find lib unixrun:
+
+	cc -I/home/pszcmg/mirage/mirage-platform-0.9.6/unix/lib -c -Wall -O3 -fPIC -I/home/pszcmg/.opam/4.00.1.android/lib/ocaml -o lib/checksum_stubs.o lib/checksum_stubs.c
+	cc -I/home/pszcmg/mirage/mirage-platform-0.9.6/unix/lib -c -Wall -O3 -fPIC -I/home/pszcmg/.opam/4.00.1.android/lib/ocaml -o lib/tap_stubs_os.o lib/tap_stubs_os.c
+	/home/pszcmg/.opam/4.00.1.android/bin/ocamlmklib -o lib/unixrun lib/checksum_stubs.o lib/tap_stubs_os.o
+
+THis is caused by myocamlbuild.ml rules for directly invoking cc and ar; WHY??
+
+If I take out the custom CC rules then it does a standard build which also fails, because ocamlbuild still uses default ocamlmklib, and in this version has no override. This is part of standard distribution.  Maybe [this](https://forge.ocamlcore.org/tracker/?func=detail&atid=291&aid=1252&group_id=54) is useful...
+
 
 #### mirage
 
@@ -345,4 +416,37 @@ Has native code, tuntap_stubs.c. Has branches for __linux__ and __APPLE__/__MACH
 
 Hopefully just getting the cross-compiler used will set this correctly?!
 
+	unset OCAMLFIND_CONF
+	make clean
+	ocamlbuild -just-plugin
+
+try..
+	cat `opam config var prefix`/lib/findlib.conf.d/android.conf  | sed -e 's/(android)//g' > android.conf
+	export  OCAMLFIND_CONF=~/mirage/mirage-platform-0.9.6/unix/android.conf 
+
+	make build
+	make install
+
+
+#### Mirage-skeleton basic
+
+	unset OCAMLFIND_CONF
+	make clean
+	ocamlbuild -just-plugin
+
+try..
+	cat `opam config var prefix`/lib/findlib.conf.d/android.conf  | sed -e 's/(android)//g' > android.conf
+	export  OCAMLFIND_CONF=~/mirage/mirage-platform-0.9.6/unix/android.conf 
+
+	make build
+
+/home/pszcmg/.opam/4.00.1.android/lib/android-ndk-linux/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.7/../../../../arm-linux-androideabi/bin/ld: error: cannot find -lunixrun
+/home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/mirage/oS.a(oS.o):function camlOS__Netif__plug_1096: error: undefined reference to 'pcap_get_buf_len'
+/home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/mirage/oS.a(oS.o)(.data+0x162c): error: undefined reference to 'pcap_get_buf_len'
+/home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/mirage/oS.a(oS.o)(.data+0x1630): error: undefined reference to 'pcap_opendev'
+collect2: error: ld returned 1 exit status
+File "caml_startup", line 1:
+Error: Error during linking
+Command exited with code 2.
+make: *** [main.native] Error 10
 
