@@ -365,6 +365,8 @@ Has native files; one checksum speedup; other tap_stubs_linux which just emits a
 
 perhaps we can compile myocamlbuild.ml first ourselves...
 
+Also try ocamlbuild -byte-plugin; ocamlbuild -ocamlfind `opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
+
 	make clean
 	ocamlbuild -just-plugin
 
