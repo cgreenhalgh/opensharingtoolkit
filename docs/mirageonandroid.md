@@ -557,7 +557,13 @@ On we go...
 
 Fix for backend.ml /tmp -> /data/local/tmp as per basic example.
 
-Doesn't print much:
+	cd src
+	ocamlbuild -just-plugin
+
+Steal the ocamlbuild line from the Makefile:
+	ocamlbuild -classic-display -use-ocamlfind -lflag -linkpkg  -pkgs lwt.syntax,fd-send-recv,cohttp.mirage,uri,re -tags "syntax(camlp4o)" main.native
+
+Install on android and run; Doesn't print much:
 shell@android:/data/local/tmp $ ./static_website                               
 	Devices: [static] provider start
 	Devices: [static:static] provider plug
