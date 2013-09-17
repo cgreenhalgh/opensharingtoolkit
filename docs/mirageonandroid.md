@@ -376,11 +376,11 @@ try..
 	make install
 
 If you get the following then you are missing the LD fix in ocaml-android (above):
-+ touch lib/oS.mli  ; if  /home/pszcmg/.opam/4.00.1.android/bin/ocamlfind ocamlopt -pack -I lib lib/env.cmx lib/io_page.cmx lib/clock.cmx lib/time.cmx lib/console.cmx lib/main.cmx lib/devices.cmx lib/netif.cmx -o lib/oS.cmx  ; then  rm -f lib/oS.mli  ; else  rm -f lib/oS.mli  ; exit 1; fi
-ld: /tmp/camlOS__d5a98e.o: Relocations in generic ELF (EM: 40)
-/tmp/camlOS__d5a98e.o: could not read symbols: File in wrong format
-File "lib/oS.cmx", line 1:
-Error: Error during partial linking
+	+ touch lib/oS.mli  ; if  /home/pszcmg/.opam/4.00.1.android/bin/ocamlfind ocamlopt -pack -I lib lib/env.cmx lib/io_page.cmx lib/clock.cmx lib/time.cmx lib/console.cmx lib/main.cmx lib/devices.cmx lib/netif.cmx -o lib/oS.cmx  ; then  rm -f lib/oS.mli  ; else  rm -f lib/oS.mli  ; exit 1; fi
+	ld: /tmp/camlOS__d5a98e.o: Relocations in generic ELF (EM: 40)
+	/tmp/camlOS__d5a98e.o: could not read symbols: File in wrong format
+	File "lib/oS.cmx", line 1:
+	Error: Error during partial linking
 
 This is bad (causes final app not to find lib unixrun:
 
@@ -390,6 +390,12 @@ This is bad (causes final app not to find lib unixrun:
 
 THis is caused by myocamlbuild.ml rules for directly invoking cc and ar; WHY??
 Just take them out... (also needs fixes for ocamlbuild/ocamlmklib - see compiler stuff above)
+
+If you get the following similar error then you are missing the ocamlmklib fix in ocamlbuild (above):
+	+ /home/pszcmg/.opam/4.00.1.android/bin/ocamlmklib -o lib/unixrun lib/checksum_stubs.o lib/tap_stubs_os.o
+	/usr/bin/ld: lib/checksum_stubs.o: Relocations in generic ELF (EM: 40)
+	lib/checksum_stubs.o: could not read symbols: File in wrong format
+
 
 #### mirage
 
@@ -428,33 +434,43 @@ try..
 
 #### Mirage-skeleton basic
 
+
+backend.ml includes:
+	 let sockaddr = Unix.ADDR_UNIX (Printf.sprintf "/tmp/mir-%d.sock" (Unix.getpid ())) in
+	 let sock = Lwt_unix.(socket PF_UNIX SOCK_STREAM 0) in
+ 
+But tmp on Android is typically /data/local/tmp. Its a bit fiddly to add a link from /tmp as the root filesystem is readonly by default. CHange it in backend.ml...
+	let sockaddr = Unix.ADDR_UNIX (Printf.sprintf "/data/local/tmp/mir-%d.sock" (Unix.getpid ())) in
+	...
+
+Now build it:
 	unset OCAMLFIND_CONF
 	make clean
 	ocamlbuild -just-plugin
 
-try..
 	export  OCAMLFIND_CONF=~/android.conf 
 
-	make build
+make build insists on rebuiding myocamlbuild.ml, so just using the ocamlbuild from the Makefile directly:
+
+	ocamlbuild -classic-display -use-ocamlfind -lflag -linkpkg  -pkgs lwt.syntax,fd-send-recv,mirage -tags "syntax(camlp4o)" main.native
+
 
 Without fixing ocamlbuild/ld you might get:
 	/home/pszcmg/.opam/4.00.1.android/lib/android-ndk-linux/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/bin/../lib/gcc/arm-linux-androideabi/4.7/../../../../arm-linux-androideabi/bin/ld: error: cannot find -lunixrun
-	/home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/mirage/oS.a(oS.o):function camlOS__Netif__plug_1096: error: undefined reference to 'pcap_get_buf_len'
-	/home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/mirage/oS.a(oS.o)(.data+0x162c): error: undefined reference to 'pcap_get_buf_len'
-	/home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/mirage/oS.a(oS.o)(.data+0x1630): error: undefined reference to 'pcap_opendev'
-	collect2: error: ld returned 1 exit status
-	File "caml_startup", line 1:
-	Error: Error during linking
-	Command exited with code 2.
-	make: *** [main.native] Error 10
+	...
 
-I now get 
-	+ /home/pszcmg/.opam/4.00.1+mirage-android/bin/ocamlfind ocamlopt -linkpkg -linkpkg -package mirage -package fd-send-recv -package lwt.syntax -syntax camlp4o backend.cmx hello.cmx main.cmx -o main.native
-	File "_none_", line 1:
-	Error: Files /home/pszcmg/.opam/4.00.1+mirage-android/arm-linux-androideabi/lib/cstruct/cstruct.cmxa
-	       and /home/pszcmg/.opam/4.00.1+mirage-android/arm-linux-androideabi/lib/ocplib-endian/bigstring.cmxa
-	       make inconsistent assumptions over implementation EndianBigstring
-	Command exited with code 2.
-	make: *** [main.native] Error 10
+Without fixing the sockaddr path you might get (when run on Android):
+	Fatal error: exception Unix.Unix_error(20, "bind", "")
+Error 20 = no such directory, see `opam config var prefix`/lib/android-ndk-linux/platforms/android-14/arch-arm/usr/include/sys/_errdefs.h
 
+If you get no output on Android then could be a buffered output problem. After using [Mort's fix](https://github.com/mor1/mirage/commit/fec9133cdabce8553659d4d474ce3874a4ab6799) for mirage-unix I get...
+
+	adb push _build/main.native /data/local/tmp
+	adb shell
+	shell@android:/ $ cd /data/local/tmp
+	shell@android:/data/local/tmp $ ./main.native                                  
+	hello
+	world
+	hello
+	...
 
