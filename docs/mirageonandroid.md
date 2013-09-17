@@ -535,13 +535,35 @@ Not checked in more detail.
 
 #### cohttp
 
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-cohttp"
+
+Note: require mirage & mirage-net to be installed first (not integrated with repo yet).
+
+##### Working notes
+
 Including cohttp.mirage
 
-Fix me
+Uses oasis. Default build does not build cohttp.mirage. Added to config flags in opam. 
+Mirage-net required, but left optional in opam as I haven't sorted out opam for it yet.
+So will blow up if mirage-net not build/installed before attempting opam install
+
+[archive](https://github.com/mirage/ocaml-cohttp/archive/ocaml-cohttp-0.9.10.tar.gz)
 
 #### Mirage skeleton static website
 
 This depends on packages cohttp.mirage, uri and re in addition to those required for the basic app.
 
 On we go...
+
+Fix for backend.ml /tmp -> /data/local/tmp as per basic example.
+
+Doesn't print much:
+shell@android:/data/local/tmp $ ./static_website                               
+	Devices: [static] provider start
+	Devices: [static:static] provider plug
+	Devices: [static:static] no waiters
+If you close browser:
+	EXN: Channel.Make(Flow).Closed
+
+BUt does serve a page on http://localhost:8080/ :-)
 
