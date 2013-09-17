@@ -591,7 +591,7 @@ Steal the ocamlbuild line from the Makefile:
 
 Install on android and run; Doesn't print much:
 
-shell@android:/data/local/tmp $ ./static_website                               
+	shell@android:/data/local/tmp $ ./static_website                               
 	Devices: [static] provider start
 	Devices: [static:static] provider plug
 	Devices: [static:static] no waiters
