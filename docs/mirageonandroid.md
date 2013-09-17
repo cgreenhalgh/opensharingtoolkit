@@ -83,6 +83,12 @@ optional:
 
 * (async)[https://github.com/janestreet/async] (optional) - dependencies not shown here
 
+Additionally required for mirage-skeleton static_website:
+
+* re (currently 1.2.1), requires ocamlfind.
+* uri (currently 1.3.8), requires ocamlfind, re, optional ounit >1.0.2
+* cohttp.mirage (cohttp.0.9.10 ?), requires "ocamlfind" "re" "uri" {>="1.3.2"} "ounit" "cstruct", optionally "async" {>="109.15.00"} "lwt" {>="2.4.3"} "mirage-net" {>="0.5.0"}  
+
 Mirage applications are build using [mirari](https://github.com/mirage/mirari), currently release 0.9.7. This requires cmdliner & tuntap >= 0.5 & fd-send-recv.
 
 Mirari uses a *.conf file to work out what to do. This includes:
@@ -178,7 +184,9 @@ Seemed to work.
 
 #### cstruct
 
-TODO: add to my opam repo ... (and following)
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-cstruct".
+
+##### Working notes
 
 [cstruct](https://github.com/mirage/ocaml-cstruct)
 [archive](https://github.com/mirage/ocaml-cstruct/archive/ocaml-cstruct-0.7.1.tar.gz)
@@ -198,6 +206,10 @@ Now target...
 
 #### lwt
 
+Already installed when setting up compiler (above).
+
+###### Working notes
+
 This seems to also use oasis.
 
 An android-lwt opam module has been created by Vouillon; this has patches and opam commands which include some overrides for the oasis-defined build to use the arm-android compilers, which may be a useful model for the above (note, I have removed the fixed path below):
@@ -215,6 +227,10 @@ An android-lwt opam module has been created by Vouillon; this has patches and op
 
 #### ocamlfind
 
+A patched version plus android toolchain configuration is part of Vouillon's repository, installed above.
+
+##### Working notes
+
 build-time only. There is a version (1.3.3.1, with a patch) in the ocaml-android repository, so that's what I'm using by default.
 It was built for android-lwt by default in this build sequence.
 
@@ -226,7 +242,44 @@ Part of core system built by ocaml-android (?!)
 
 Part of core system built by ocaml-android (?!)
 
+#### ounit
+
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-shared-memory-ring", including small patch for building test executable.
+
+##### Working notes
+
+[archive](http://forge.ocamlcore.org/frs/download.php/886/ounit-1.1.2.tar.gz)
+
+Build: make build; make install
+
+Has _oasis. Makefile accepts BUILDFLAGS and INSTALLFLAGS. No native code.
+
+Default build includes a test executable, defaulting to bytecode; this will fail with current ocaml-android compiler (as per [readme](https://github.com/vouillon/ocaml-android) problems). So one option is to edit _oasis and add the CompiledObject bit to the test build info:
+
+	Executable test
+	  Path:   test
+	  MainIs: test.ml
+	  BuildDepends: oUnit
+	  Install: false
+	  CompiledObject: native
+  
+Oasis build for target...
+	oasis setup
+	ocaml setup.ml -configure --override ocamlfind `opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
+	ocaml setup.ml -build
+	ocaml setup.ml -install
+
+Otherwise test fails...
++ /home/pszcmg/.opam/4.00.1.android/bin/arm-linux-androideabi/ocamlfind ocamlc -g -linkpkg -package unix src/oUnit.cma test/test.cmo -o test/test.byte
+File "_none_", line 1:
+Error: Error on dynamically loaded library: /home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/ocaml/stublibs/dllunix.so: /home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/ocaml/stublibs/dllunix.so: cannot open shared object file: No such file or directory
+Command exited with code 2.
+
 #### shared-memory-ring
+
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-shared-memory-ring", including patch for (lack of) dmb.
+
+##### Working notes
 
 [archive](https://github.com/mirage/shared-memory-ring/archive/shared-memory-ring-0.4.1.tar.gz)
 [git](https://github.com/mirage/shared-memory-ring.git)
@@ -266,7 +319,7 @@ Maybe do this in lib/barrier.h:
 	#define xen_wmb()   __sync_synchronize()
 	#endif
  
-See [this fork](https://github.com/cgreenhalgh/shared-memory-ring.git)
+See [this fork](https://github.com/cgreenhalgh/shared-memory-ring.git) or [this patch](https://github.com/cgreenhalgh/shared-memory-ring/commit/72352b35ef7b309886e965e4e85acd3048eaf819.patch)
 
 Oasis build for target...
 	#	oasis setup
@@ -274,36 +327,11 @@ Oasis build for target...
 	ocaml setup.ml -build
 	ocaml setup.ml -install
 
-#### ounit
-
-[archive](http://forge.ocamlcore.org/frs/download.php/886/ounit-1.1.2.tar.gz)
-
-Build: make build; make install
-
-Has _oasis. Makefile accepts BUILDFLAGS and INSTALLFLAGS. No native code.
-
-Default build includes a test executable, defaulting to bytecode; this will fail with current ocaml-android compiler (as per [readme](https://github.com/vouillon/ocaml-android) problems). So one option is to edit _oasis and add the CompiledObject bit to the test build info:
-
-	Executable test
-	  Path:   test
-	  MainIs: test.ml
-	  BuildDepends: oUnit
-	  Install: false
-	  CompiledObject: native
-  
-Oasis build for target...
-	oasis setup
-	ocaml setup.ml -configure --override ocamlfind `opam config var prefix`/bin/arm-linux-androideabi/ocamlfind
-	ocaml setup.ml -build
-	ocaml setup.ml -install
-
-Otherwise test fails...
-+ /home/pszcmg/.opam/4.00.1.android/bin/arm-linux-androideabi/ocamlfind ocamlc -g -linkpkg -package unix src/oUnit.cma test/test.cmo -o test/test.byte
-File "_none_", line 1:
-Error: Error on dynamically loaded library: /home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/ocaml/stublibs/dllunix.so: /home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/ocaml/stublibs/dllunix.so: cannot open shared object file: No such file or directory
-Command exited with code 2.
-
 #### ipaddr
+
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-ipaddr".
+
+##### Working notes
 
 (ipaddr)[https://github.com/mirage/ocaml-ipaddr] 
 
@@ -321,6 +349,10 @@ Oasis build for target...
 
 #### tuntap
 
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-tuntap" based on my [git fork](https://github.com/cgreenhalgh/ocaml-tuntap) with implementation of getifaddrs from  [getifaddrs for android](https://github.com/kmackay/android-ifaddrs).
+
+##### Working notes
+
 [archive](https://github.com/mirage/ocaml-tuntap/archive/0.6.tar.gz)
 [git](https://github.com/mirage/ocaml-tuntap/)
 
@@ -333,7 +365,7 @@ This defines getifaddrs and freeifaddrs
 Seems to be known - this might fix it [getifaddrs for android](https://github.com/kmackay/android-ifaddrs)
 Not sure how to set up conditional compilation at the moment though, or to get compiler to add lib/ to C-compiler include path...
 
-[git fork](https://github.com/cgreenhalgh/ocaml-tuntap)
+[git fork](https://github.com/cgreenhalgh/ocaml-tuntap), in particular [0.6.android](https://github.com/cgreenhalgh/ocaml-tuntap/archive/0.6.android.tar.gz).
 Note, no TUNSETGROUP, as well as replacement for getifaddrs and tweak for broadcast.
 
 Oasis build for target...
@@ -433,7 +465,6 @@ try..
 	make build
 	make install
 
-
 #### Mirage-skeleton basic
 
 
@@ -475,4 +506,42 @@ If you get no output on Android then could be a buffered output problem. After u
 	world
 	hello
 	...
+
+#### re
+
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-re"
+
+##### WOrking notes
+
+[archive](https://github.com/ocaml/ocaml-re/archive/ocaml-re-1.2.1.tar.gz). 
+
+Configured using _oasis. Standard repo version includes an extra re.config file with explicit include paths.
+
+It defines syntax extensions. Note sure if that will upset the build process. 
+
+I seem to have to rename (opam) files/re.config.in to files/android-re.config.in. Also tweaked paths (perhaps incorrectly) for toolchain lib. 
+
+#### uri
+
+In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-uri"
+
+##### Working notes
+
+[archive](https://github.com/mirage/ocaml-uri/archive/ocaml-uri-1.3.8.tar.gz).
+
+Uses oasis.
+
+Not checked in more detail.
+
+#### cohttp
+
+Including cohttp.mirage
+
+Fix me
+
+#### Mirage skeleton static website
+
+This depends on packages cohttp.mirage, uri and re in addition to those required for the basic app.
+
+On we go...
 
