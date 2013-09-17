@@ -2,7 +2,15 @@
 
 Trying to get [Mirage](http://openmirage.org) running on Android...
 
-Status: work in progress (2013-09-13) - Ocaml 4.00.1 cross-compiler working; Mirage (mostly) working on Linux.
+Status: work in progress (2013-09-17) - Ocaml 4.00.1 cross-compiler working; Mirage pre-reqs building with opam; Mirage basic and website_static examples working on Android as native unix/direct applications. Mirari not (yet) used.
+
+Contents:
+
+* Introduction
+* Mirage on Unix (general)
+* Ocaml on Android
+* Notes on Building Mirage (general)
+* Package specific build details
 
 ## Introduction
 
@@ -108,19 +116,19 @@ For Unix, mirari build just calls "make build" and links the native executable t
 
 I haven't tried to use/fix mirari for cross-compilation - just trying to build directly.
 
-### Package specific details
+## Package specific build details
 
 Hopefully in build/dependency order...
 
 Fixes should be migrated into [my opam repo](https://github.com/cgreenhalgh/opam-android-repository).
 
-#### fd-send-recv
+### fd-send-recv
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-fd-send-recv`.
 
 See [variant archive](https://github.com/cgreenhalgh/ocaml-fd-send-recv/tree/ocaml-fd-send-recv-1.0.1-nostatvfs) where I have removed include of statvfs.h. 
 
-##### Working notes:
+#### Working notes:
 
 [archive]("https://github.com/xen-org/ocaml-fd-send-recv/archive/ocaml-fd-send-recv-1.0.1.tar.gz")
 
@@ -142,11 +150,11 @@ See [git fork](https://github.com/cgreenhalgh/ocaml-fd-send-recv/tree/ocaml-fd-s
 	ocaml setup.ml -build
 	ocaml setup.ml -install
 
-#### optcomp
+### optcomp
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-optcomp`.
 
-##### Working notes:
+#### Working notes:
 
 [archive](https://forge.ocamlcore.org/frs/download.php/1011/optcomp-1.4.tar.gz)
 
@@ -165,11 +173,11 @@ Now try and make the android toolchain think it has it too - let's try the follo
 
 	ln -s `opam config var prefix`/lib/optcomp `opam config var prefix`/arm-linux-androideabi/lib/
 
-#### ocplib-endian
+### ocplib-endian
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-ocplib-endian`.
 
-##### Working notes
+#### Working notes
 
 [ocplib-endian](https://github.com/OCamlPro/ocplib-endian 
 [archive](https://github.com/OCamlPro/ocplib-endian/archive/0.4.tar.gz)
@@ -187,11 +195,11 @@ Trying...
 
 Seemed to work.
 
-#### cstruct
+### cstruct
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-cstruct`.
 
-##### Working notes
+#### Working notes
 
 [cstruct](https://github.com/mirage/ocaml-cstruct)
 [archive](https://github.com/mirage/ocaml-cstruct/archive/ocaml-cstruct-0.7.1.tar.gz)
@@ -210,11 +218,11 @@ Now target...
 	ocaml setup.ml -build
 	ocaml setup.ml -install
 
-#### lwt
+### lwt
 
 Already installed when setting up compiler (above).
 
-###### Working notes
+##### Working notes
 
 This seems to also use oasis.
 
@@ -231,28 +239,28 @@ An android-lwt opam module has been created by Vouillon; this has patches and op
 	  ["ocaml" "setup.ml" "-install"]
 	]
 
-#### ocamlfind
+### ocamlfind
 
 A patched version plus android toolchain configuration is part of Vouillon's repository, installed above.
 
-##### Working notes
+#### Working notes
 
 build-time only. There is a version (1.3.3.1, with a patch) in the ocaml-android repository, so that's what I'm using by default.
 It was built for android-lwt by default in this build sequence.
 
-#### base-threads
+### base-threads
 
 Part of core system built by ocaml-android (?!)
 
-#### base-unix
+### base-unix
 
 Part of core system built by ocaml-android (?!)
 
-#### ounit
+### ounit
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-shared-memory-ring`, including small patch for building test executable.
 
-##### Working notes
+#### Working notes
 
 [archive](http://forge.ocamlcore.org/frs/download.php/886/ounit-1.1.2.tar.gz)
 
@@ -283,11 +291,11 @@ Otherwise test fails...
 	Error: Error on dynamically loaded library: /home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/ocaml/stublibs/dllunix.so: /home/pszcmg/.opam/4.00.1.android/arm-linux-androideabi/lib/ocaml/stublibs/dllunix.so: cannot open shared object file: No such file or directory
 	Command exited with code 2.
 
-#### shared-memory-ring
+### shared-memory-ring
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-shared-memory-ring", including patch for (lack of) dmb.
 
-##### Working notes
+#### Working notes
 
 [archive](https://github.com/mirage/shared-memory-ring/archive/shared-memory-ring-0.4.1.tar.gz)
 [git](https://github.com/mirage/shared-memory-ring.git)
@@ -339,11 +347,11 @@ Oasis build for target...
 	ocaml setup.ml -build
 	ocaml setup.ml -install
 
-#### ipaddr
+### ipaddr
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-ipaddr`.
 
-##### Working notes
+#### Working notes
 
 (ipaddr)[https://github.com/mirage/ocaml-ipaddr] 
 
@@ -360,11 +368,11 @@ Oasis build for target...
 	ocaml setup.ml -build
 	ocaml setup.ml -install
 
-#### tuntap
+### tuntap
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as "opam install android-tuntap" based on my [git fork](https://github.com/cgreenhalgh/ocaml-tuntap) with implementation of getifaddrs from  [getifaddrs for android](https://github.com/kmackay/android-ifaddrs).
 
-##### Working notes
+#### Working notes
 
 [archive](https://github.com/mirage/ocaml-tuntap/archive/0.6.tar.gz)
 [git](https://github.com/mirage/ocaml-tuntap/)
@@ -391,7 +399,7 @@ Oasis build for target...
 	ocaml setup.ml -install
 
 
-#### mirage-unix
+### mirage-unix
 
 [archive](https://github.com/mirage/mirage-platform/archive/v0.9.6.tar.gz).
 
@@ -450,11 +458,11 @@ If you get the following similar error then you are missing the ocamlmklib fix i
 	lib/checksum_stubs.o: could not read symbols: File in wrong format
 
 
-#### mirage
+### mirage
 
 No-op
 
-#### mirage-net-socket
+### mirage-net-socket
 
 0.9.4. [archive](https://github.com/mirage/mirage-net/archive/v0.9.4.tar.gz)
 
@@ -485,7 +493,7 @@ try..
 	make build
 	make install
 
-#### Mirage-skeleton basic
+### Mirage-skeleton basic
 
 
 backend.ml includes:
@@ -532,11 +540,11 @@ If you get no output on Android then could be a buffered output problem. After u
 	hello
 	...
 
-#### re
+### re
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-re`
 
-##### Working notes
+#### Working notes
 
 [archive](https://github.com/ocaml/ocaml-re/archive/ocaml-re-1.2.1.tar.gz). 
 
@@ -546,11 +554,11 @@ It defines syntax extensions. Note sure if that will upset the build process.
 
 I seem to have to rename (opam) files/re.config.in to files/android-re.config.in. Also tweaked paths (perhaps incorrectly) for toolchain lib. 
 
-#### uri
+### uri
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-uri`
 
-##### Working notes
+#### Working notes
 
 [archive](https://github.com/mirage/ocaml-uri/archive/ocaml-uri-1.3.8.tar.gz).
 
@@ -558,13 +566,13 @@ Uses oasis.
 
 Not checked in more detail.
 
-#### cohttp
+### cohttp
 
 In [my opam repo](https://github.com/cgreenhalgh/opam-android-repository) as `opam install android-cohttp`
 
 Note: require mirage & mirage-net to be installed first (not integrated with repo yet).
 
-##### Working notes
+#### Working notes
 
 Including cohttp.mirage
 
@@ -574,7 +582,7 @@ So will blow up if mirage-net not build/installed before attempting opam install
 
 [archive](https://github.com/mirage/ocaml-cohttp/archive/ocaml-cohttp-0.9.10.tar.gz)
 
-#### Mirage skeleton static website
+### Mirage skeleton static website
 
 This depends on packages cohttp.mirage, uri and re in addition to those required for the basic app.
 
