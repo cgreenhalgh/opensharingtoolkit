@@ -11,6 +11,7 @@ Contents:
 * Ocaml on Android
 * Notes on Building Mirage (general)
 * Package specific build details
+* Thoughts on cross-compiling
 
 ## Introduction
 
@@ -609,4 +610,68 @@ If you close browser:
 	EXN: Channel.Make(Flow).Closed
 
 BUt does serve a page on http://localhost:8080/ :-)
+
+## Thoughts on Cross-compiling
+
+I'll assume: 
+
+* using opam
+* using ocamlbuild
+* using ocamlfind
+
+I'll consider:
+
+* using oasis
+* using ocamlfind toolchains
+
+Goals:
+
+* require no changes to simple packages
+* require minimal changes to complex packages
+* same package can support multiple targets, including native, not just a single target
+
+General observations/reality checks:
+
+* most projects contain some source to support the build (to run on the build machine) and some source for the target (to run on the target machine), so in general both native toolchain and cross-compiling toolchain must be present.
+* legacy packages don't distinguish explicitly which is which
+* myocamlbuid.ml will almost always be build only
+* syntax extensions will be used on build only and should be bytecode, although they may have dependences on modules that are also target depedencies
+* the build tools themselves will need ocaml stublibs (e.g. dllunix.so) for the build platform while building the target executables will expects stublibs for the target platform. 
+* in an oasis project some additional inferences can be made, e.g. BuildTools: x implies x runs on build, Executable x install: true may imply x runs on build, but some are unclear, e.g. whether BuildDepends are build and/or target dependencies 
+* there are lots of different build approaches around, even in opam packages, including Makefiles, ocamlbuild extensions, oasis, other custom build frameworks, ...
+
+Some options:
+
+* opam switch is intended to manage different compilers, and you need at least the native compiler and the cross-compiler. So why not have one for each? 
+* an environment variable, e.g. set by the opam compiler set-up, could indicate to all build processes that this is a cross-compilation. It would make sense for this to be in the cross-compiler.
+* access to different compilers could be ocamlfind/findlib configuration. Separate findlib.conf or toolchain?!
+* ocamlbuild for the cross-compiler could know how to use/find native tools and libraries for myocamlbuild, e.g. a custom (native) ocamlfind for those.
+* ocamlbuild _tags could also be used distinguish build-time targets (or specify custom ocamlfind). 
+* oasis could be extended to (a) make best guess at setting these tags and (b) include options to specify explicitly in _oasis.
+
+### ocaml-android's approach
+
+[Vouillon](https://github.com/vouillon/opam-android-repository/) has created target-specific opam packages which includes custom build configuration, which typically overrides the choice of ocamlfind.
+
+The ocaml cross-compiler is installed within but essentially independently of the current opam switch compiler. The cross-compiler is made available as a custom toolchain in ocamlfind (or by using a target-specific ocamlfind). In practice this is a separate installation (could be a separate findlib.conf) rather a typical toolchain fix, as it specifies its own destdir, stdlib and ldconf, not just the various build tools.
+
+Good points:
+
+* often no build-related changes to package source
+* typically small changes to opam build and remove specifications, which are fairly standard for packages using oasis
+
+Bad points:
+
+* Cannot directly use existing opam packages, even for simple cases
+* doesn't work with standard `ocamlbuild -use-ocamlfind` because this doesn't have a standard way to override the choice of ocamlfind or specify a toolchain, and if it did uses the same ocamlfind to build both the plugin and other files. A partial work-around is to do `ocamlbuild -just-plugin` first, then set OCAMLFIND_CONF to just use the cross-compiler & libs and ocamlbuild again. In theory `ocamlbuild -byte-plugin` might also work, but when compiling it demands a unix stub DLL for the target but when running requires it for the build platform.
+
+### Background
+
+There are various examples of building and using Ocaml cross-compilers, but they are generally then hand/custom building applications. So no real emphasis on packaging, or transparently allowing native and (multiple) cross-compiled. 
+
+From [opam git](https://github.com/OCamlPro/opam/blob/master/src/client/opamArg.ml) re `opam config exec`:
+
+	Execute the shell script given in parameter with the correct environment variables. 
+        This option can be used to cross-compile between switches using 
+        $(b,opam config exec \"CMD ARG1 ... ARGn\" --switch=SWITCH)
 
