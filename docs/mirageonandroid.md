@@ -645,7 +645,7 @@ Some options:
 * opam switch is intended to manage different compilers, and you need at least the native compiler and the cross-compiler. So why not have one for each? 
 * an environment variable, e.g. set by the opam compiler set-up, could indicate to all build processes that this is a cross-compilation. It would make sense for this to be in the cross-compiler.
 * access to different compilers could be ocamlfind/findlib configuration. Separate findlib.conf or toolchain?!
-* ocamlbuild for the cross-compiler could know how to use/find native tools and libraries for myocamlbuild, e.g. a custom (native) ocamlfind for those.
+* ocamlbuild for the cross-compiler could know how to use/find native tools and libraries for myocamlbuild, e.g. a custom (native) ocamlfind for those, or a native ocamlbuild (since ocamlbuild seems to have default paths built in).
 * ocamlbuild _tags could also be used distinguish build-time targets (or specify custom ocamlfind). 
 * oasis could be extended to (a) make best guess at setting these tags and (b) include options to specify explicitly in _oasis.
 
@@ -674,4 +674,82 @@ From [opam git](https://github.com/OCamlPro/opam/blob/master/src/client/opamArg.
 	Execute the shell script given in parameter with the correct environment variables. 
         This option can be used to cross-compile between switches using 
         $(b,opam config exec \"CMD ARG1 ... ARGn\" --switch=SWITCH)
+
+### Making a cross-compiler
+
+This but is just my notes to self...
+
+[ocaml source](https://github.com/ocaml/ocaml) - [my fork](https://github.com/cgreenhalgh/ocaml).
+
+For native compiler ./configure should work; just specify `-prefix <install-path>`. Standard build is then (something like):
+
+	./configure -prefix ~/android/ocaml-native
+	make world
+	make install
+
+Or a more restrained build should do:
+
+	./configure -prefix ~/android/ocaml-native
+	make OTHERLIBRARIES="unix str num dynlink" BNG_ASM_LEVEL=0 world
+	make OTHERLIBRARIES="unix str num dynlink" BNG_ASM_LEVEL=0 install
+
+Perhaps I should then make again but not install for the new prefix (otherwise ocamlbuild is kept and is configured for native prefix!) (this should include camlp4out, not opt/native):
+
+	./configure -prefix ~/android/ocaml-cross
+	make OTHERLIBRARIES="unix str num dynlink" BNG_ASM_LEVEL=0 world
+
+The native C toolchain needs to be installed. [ocaml-android](https://github.com/vouillon/ocaml-android/) uses the [Android NDK](http://developer.android.com/tools/sdk/ndk/index.html) which includes pre-built tools and is available for windows, Mac OS X and Linux (each 32 or 64 bit). E.g. [Linux 64 bit NDK](http://dl.google.com/android/ndk/android-ndk-r9-linux-x86_64.tar.bz2). Specific config used are SYSROOT `.../platform/android-14/arch-arm` and ANDROID_PATH `.../toolchains/arm-linux-androideabi-4.7/prebuilt/$(ARCH)-x86/bin`. Note that this eabi is not include by default with NDK r9 (try 4.6 or 4.8). 
+
+Following [ocaml-android](https://github.com/vouillon/ocaml-android/) the next steps are:
+
+* configure for Android by copying in custom config/m.h, config/s.h and config/Makefile, including fixing up the installation and dependency paths in the Makefile
+* apply patches (which could have been done earlier) (`patch -p 0 < ...`), which are:
+  * memory.patch - byterun/misc.h - header name clash
+  * ocamlbuild.patch - ocamlbuild/ocaml_specific.ml - optional removal of shared library rule
+  * system.patch - asmrun/signals_osdep.h, otherlibs/unix/getpw.c, otherlibs/unix/termios.c - workaround lack of sys/ucontext.h, lack of pw gecos and tcdrain
+* save byterun/ocamlrun
+* clean up native build (selective):
+
+	make -C byterun clean
+	make -C stdlib clean
+	make -C otherlibs/unix clean
+	make -C otherlibs/str clean
+	make -C otherlibs/num clean
+	make -C otherlibs/dynlink clean
+
+* build byterun and keep byterun/ocamlrun:
+
+	make -C byterun all
+	mkdir -p ~/android/ocaml-cross/bin
+	cp byterun/ocamlrun ~/android/ocaml-cross/bin/ocamlrun.target
+
+* put back the native one:
+
+	cp ~/android/ocaml-native/bin/ocamlrun byterun/
+
+* make the rest (be selective... don't world/coldstart!)
+
+	make coreall opt-core otherlibraries otherlibrariesopt
+	make ocamltoolsopt
+	make install
+
+Note: can't make camlp4out at this stage because of incompatible dllunix.so
+
+* possibly replace camlp4 stuff - not quite sure why at the moment:
+
+	#rm -rf $(ANDROID_PREFIX)/lib/ocaml/camlp4
+	#ln -sf $(STDLIB)/camlp4 $(ANDROID_PREFIX)/lib/ocaml/camlp4
+
+### Now using the cross-compiler...
+
+#### ocamlfind
+
+ex. [opam ocamlfid](https://github.com/mirage/opam-repository/blob/master/packages/ocamlfind.1.4.0/opam)
+
+Hmm. Well, it is a build tool, so needs to run on the build platform, so should be compiled with the native toolchain. 
+
+But it also configures itself using information obtained by running some of the ocaml commands, which should therefore be the cross-compiler toolchain.
+
+So (not surprisingly) this will need some special handling. And the build should be cross-compile-aware. As a minimum the build will need to know where to find the native toolchain, e.g. the native install prefix, say `OCAML_NATIVE_BIN`.
+
 
