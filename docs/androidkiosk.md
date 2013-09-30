@@ -100,6 +100,17 @@ This assumes (a) the WiFi interface name is "wlan0" and (b) these are suitable t
 
 Status: works on my nexus 7, i.e. exposes hotspot settings and when enabled another device can connect and communicate. 
 
+However applications on the device (including webkit, browser, adobe reader and download) cannot read files from the device's WiFi IP address, e.g. browser fails with error "Authentication via the proxy server was unsuccessful". Presumably related logcat entries:
+
+'''
+09-30 10:43:42.500: D/Tethering(504): TetheredState.processMessage what=12
+09-30 10:43:47.670: D/Tethering(504): TetherModeAliveState.processMessage what=5
+09-30 10:43:47.680: D/Tethering(504): chooseUpstreamType(false), preferredApn =5, got type=-1
+09-30 10:43:47.680: D/Tethering(504): notifying tethered with iface =null
+''' 
+
+Note that browser and webkit do work with 'localhost', but not '127.0.0.1', although download and adobe reader don't. Also, other devices using the hotspot network can communicate with server(s) on the device using its wifi interface IP address. 
+
 Note: hotspot is NOT automatically re-enabled after reboot, even if it was running before.
 
 ### Web server
